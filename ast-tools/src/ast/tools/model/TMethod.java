@@ -6,7 +6,7 @@ import java.util.Set;
 public interface TMethod {
 	String getName();
 
-	List<TParameter> getParameters();
+	Set<TParameter> getParameters();
 
 	List<String> getReturnTypes();
 
