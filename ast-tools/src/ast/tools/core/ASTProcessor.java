@@ -24,7 +24,7 @@ import ast.tools.context.ASTWriter;
 import ast.tools.helper.CompilationUnitHelper;
 import ast.tools.internal.context.impl.ASTContextImpl;
 import ast.tools.internal.visitor.ASTVisitor;
-import ast.tools.observer.ASTObservable;
+import ast.tools.observable.ASTObservable;
 
 public class ASTProcessor extends ASTObservable {
 	private ICompilationUnit iunit;

@@ -2,10 +2,12 @@ package ast.tools.observable;
 
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import ast.tools.model.TAnnotation;
 import ast.tools.model.TModifier;
+import ast.tools.model.TParameter;
 import ast.tools.observer.ASTAttributeObserver;
 import ast.tools.observer.ASTClassObserver;
 import ast.tools.observer.ASTImportObserver;
@@ -19,38 +21,67 @@ public class ASTObservable {
 
 	public ASTObservable() {
 		super();
-		this.classObservers = new HashSet<ASTClassObserver>();
 		this.attributeObservers = new HashSet<ASTAttributeObserver>();
+		this.classObservers = new HashSet<ASTClassObserver>();
 		this.methodObservers = new HashSet<ASTMethodObserver>();
 		this.importObservers = new HashSet<ASTImportObserver>();
 	}
 
-	public void notifyClassObservers(String className, String superClassName, Set<TAnnotation> annotations) {
+	/**
+	 * 
+	 * @param className
+	 * @param superClassName
+	 * @param annotations
+	 * @param interfaces
+	 */
+	public void notifyClassObservers(String className, String superClassName, Set<TAnnotation> annotations,
+			Set<String> interfaces) {
 		Iterator<ASTClassObserver> iterator = classObservers.iterator();
 		while (iterator.hasNext()) {
 			ASTClassObserver classObserver = iterator.next();
-			classObserver.update(className, superClassName, annotations);
+			classObserver.update(className, superClassName, annotations, interfaces);
 		}
 	}
 
-	public void notifyAttributeObservers(String name, String type, String genericType, Set<TModifier> modifiers,
+	/**
+	 * 
+	 * @param name
+	 * @param types
+	 * @param genericType
+	 * @param modifiers
+	 * @param annotations
+	 */
+	public void notifyAttributeObservers(String name, List<String> types, String genericType, Set<TModifier> modifiers,
 			Set<TAnnotation> annotations) {
 		Iterator<ASTAttributeObserver> iterator = attributeObservers.iterator();
 		while (iterator.hasNext()) {
 			ASTAttributeObserver attributeObserver = iterator.next();
-			attributeObserver.update(name, type, genericType, modifiers, annotations);
+			attributeObserver.update(name, types, genericType, modifiers, annotations);
 		}
 	}
 
-	public void notifyMethodObservers(String name, String type, String genericType, Set<TModifier> modifiers,
-			Set<TAnnotation> annotations) {
-		Iterator<ASTAttributeObserver> iterator = attributeObservers.iterator();
+	/**
+	 * 
+	 * @param name
+	 * @param returnTypes
+	 * @param genericReturnType
+	 * @param modifiers
+	 * @param parameters
+	 * @param annotations
+	 */
+	public void notifyMethodObservers(String name, List<String> returnTypes, String genericReturnType,
+			Set<TModifier> modifiers, Set<TParameter> parameters, Set<TAnnotation> annotations) {
+		Iterator<ASTMethodObserver> iterator = methodObservers.iterator();
 		while (iterator.hasNext()) {
-			ASTAttributeObserver attributeObserver = iterator.next();
-			attributeObserver.update(name, type, genericType, modifiers, annotations);
+			ASTMethodObserver methodObserver = iterator.next();
+			methodObserver.update(name, returnTypes, genericReturnType, modifiers, parameters, annotations);
 		}
 	}
 
+	/**
+	 * 
+	 * @param name
+	 */
 	public void notifyImportObservers(String name) {
 		Iterator<ASTImportObserver> iterator = importObservers.iterator();
 		while (iterator.hasNext()) {
