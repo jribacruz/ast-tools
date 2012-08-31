@@ -11,17 +11,5 @@ public interface TAttribute {
 
 	Set<TAnnotation> getAnnotations();
 
-	boolean isProtected();
-
-	boolean isPublic();
-
-	boolean isPrivate();
-
-	boolean isFinal();
-
-	boolean isStatic();
-
-	boolean isVolatile();
-
-	boolean isTransient();
+	Set<TModifier> getModifiers();
 }

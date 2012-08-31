@@ -12,17 +12,5 @@ public interface TMethod {
 
 	Set<TAnnotation> getAnnotations();
 
-	boolean isProtected();
-
-	boolean isPublic();
-
-	boolean isPrivate();
-
-	boolean isFinal();
-
-	boolean isStatic();
-
-	boolean isAbstract();
-
-	boolean isSynchronized();
+	Set<TModifier> getModifiers();
 }
