@@ -16,5 +16,6 @@ Export-Package: ast.tools.context,
  ast.tools.core,
  ast.tools.helper,
  ast.tools.model,
+ ast.tools.observable,
  ast.tools.observer,
  ast.tools.util
