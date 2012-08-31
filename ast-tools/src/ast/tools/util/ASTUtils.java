@@ -7,6 +7,7 @@ import java.util.Set;
 import org.eclipse.jdt.core.ICompilationUnit;
 
 import ast.tools.context.ASTContext;
+import ast.tools.context.ASTWriter;
 import ast.tools.core.ASTPredicate;
 import ast.tools.core.ASTProcessor;
 import ast.tools.internal.model.impl.TAnnotationImpl;
@@ -32,6 +33,15 @@ public class ASTUtils {
 			}
 		}
 		return unitList.toArray(new ICompilationUnit[] {});
+	}
+
+	public static void forAllWrite(ICompilationUnit[] units, ASTPredicate predicate, ASTWriter writer) {
+		ICompilationUnit[] filteredUnits = filter(units, predicate);
+		for (ICompilationUnit unit : filteredUnits) {
+			ASTProcessor processor = new ASTProcessor(unit);
+			processor.write(writer);
+			processor.commit();
+		}
 	}
 
 	public static boolean containsAnnotation(Set<TAnnotation> annotations, String name) {
