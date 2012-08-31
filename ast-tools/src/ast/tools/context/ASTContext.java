@@ -2,17 +2,27 @@ package ast.tools.context;
 
 import java.util.Set;
 
-import ast.tools.model.Annotation;
-import ast.tools.model.Attribute;
+import ast.tools.model.TAnnotation;
+import ast.tools.model.TAttribute;
+import ast.tools.model.TImport;
+import ast.tools.model.TMethod;
 
 public interface ASTContext {
 	boolean isInterface();
 
 	String getClassName();
 
+	String getPackageName();
+
 	String getSuperClassName();
 
-	Set<Annotation> getAnnotations();
+	Set<String> getInterfaces();
 
-	Set<Attribute> getAttributes();
+	Set<TAnnotation> getAnnotations();
+
+	Set<TAttribute> getAttributes();
+
+	Set<TMethod> getMethods();
+
+	Set<TImport> getImports();
 }
