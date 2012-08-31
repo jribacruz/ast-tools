@@ -10,21 +10,19 @@ import ast.tools.model.TModifier;
 public class TAttributeImpl implements TAttribute {
 
 	private String name;
-	private String type;
+	private List<String> types;
 	private String genericType;
 	private Set<TAnnotation> annotations;
 	private Set<TModifier> modifiers;
-	private List<String> types;
 
-	public TAttributeImpl(String name, String type, String genericType, Set<TAnnotation> annotations,
-			Set<TModifier> modifiers, List<String> types) {
+	public TAttributeImpl(String name, List<String> types, String genericType, Set<TAnnotation> annotations,
+			Set<TModifier> modifiers) {
 		super();
 		this.name = name;
-		this.type = type;
+		this.types = types;
 		this.genericType = genericType;
 		this.annotations = annotations;
 		this.modifiers = modifiers;
-		this.types = types;
 	}
 
 	@Override
@@ -80,33 +78,6 @@ public class TAttributeImpl implements TAttribute {
 			return false;
 		}
 		return true;
-	}
-
-	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("Attribute [");
-		if (name != null) {
-			builder.append("name=");
-			builder.append(name);
-			builder.append(", ");
-		}
-		if (type != null) {
-			builder.append("type=");
-			builder.append(type);
-			builder.append(", ");
-		}
-		if (genericType != null) {
-			builder.append("genericType=");
-			builder.append(genericType);
-			builder.append(", ");
-		}
-		if (annotations != null) {
-			builder.append("annotations=");
-			builder.append(annotations);
-		}
-		builder.append("]");
-		return builder.toString();
 	}
 
 }
