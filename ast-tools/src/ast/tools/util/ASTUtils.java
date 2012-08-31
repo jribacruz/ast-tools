@@ -17,7 +17,7 @@ public class ASTUtils {
 	public static ICompilationUnit find(ICompilationUnit[] units, ASTPredicate predicate) {
 		for (ICompilationUnit unit : units) {
 			ASTProcessor processor = new ASTProcessor(unit);
-			ASTContext context = processor.process();
+			ASTContext context = processor.visit();
 			return context != null && predicate.apply(context) ? unit : null;
 		}
 		return null;
@@ -27,7 +27,7 @@ public class ASTUtils {
 		List<ICompilationUnit> unitList = new ArrayList<ICompilationUnit>();
 		for (ICompilationUnit unit : units) {
 			ASTProcessor processor = new ASTProcessor(unit);
-			ASTContext context = processor.process();
+			ASTContext context = processor.visit();
 			if (context != null && predicate.apply(context)) {
 				unitList.add(unit);
 			}

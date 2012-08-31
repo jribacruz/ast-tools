@@ -66,7 +66,7 @@ public class ASTProcessor extends ASTObservable {
 		this.unit = (CompilationUnit) parser.createAST(null);
 	}
 
-	public ASTContext process() {
+	public ASTContext visit() {
 		ASTContext context = new ASTContextImpl();
 		if (unit != null) {
 			ASTVisitor visitor = new ASTVisitor(this);
