@@ -9,8 +9,8 @@ import org.eclipse.jdt.core.ICompilationUnit;
 import ast.tools.context.ASTContext;
 import ast.tools.core.ASTPredicate;
 import ast.tools.core.ASTProcessor;
+import ast.tools.internal.model.impl.AnnotationImpl;
 import ast.tools.model.Annotation;
-import ast.tools.model.impl.AnnotationImpl;
 
 public class ASTUtils {
 	public static ICompilationUnit find(ICompilationUnit[] units, ASTPredicate predicate) {
