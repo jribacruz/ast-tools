@@ -11,6 +11,7 @@ import ast.tools.model.TParameter;
 import ast.tools.observer.ASTAttributeObserver;
 import ast.tools.observer.ASTClassObserver;
 import ast.tools.observer.ASTImportObserver;
+import ast.tools.observer.ASTInterfaceObserver;
 import ast.tools.observer.ASTMethodObserver;
 
 public class ASTObservable {
@@ -18,6 +19,7 @@ public class ASTObservable {
 	private Set<ASTAttributeObserver> attributeObservers;
 	private Set<ASTMethodObserver> methodObservers;
 	private Set<ASTImportObserver> importObservers;
+	private Set<ASTInterfaceObserver> interfaceObservers;
 
 	public ASTObservable() {
 		super();
@@ -25,6 +27,7 @@ public class ASTObservable {
 		this.classObservers = new HashSet<ASTClassObserver>();
 		this.methodObservers = new HashSet<ASTMethodObserver>();
 		this.importObservers = new HashSet<ASTImportObserver>();
+		this.interfaceObservers = new HashSet<ASTInterfaceObserver>();
 	}
 
 	/**
@@ -87,6 +90,18 @@ public class ASTObservable {
 		while (iterator.hasNext()) {
 			ASTImportObserver importObserver = iterator.next();
 			importObserver.update(name);
+		}
+	}
+
+	/**
+	 * 
+	 * @param name
+	 */
+	public void notifyInterfaceObservers(String name, String superInterfaceName) {
+		Iterator<ASTInterfaceObserver> iterator = interfaceObservers.iterator();
+		while (iterator.hasNext()) {
+			ASTInterfaceObserver interfaceObserver = iterator.next();
+			interfaceObserver.update(name, superInterfaceName);
 		}
 	}
 
