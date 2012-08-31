@@ -80,4 +80,36 @@ public class TAttributeImpl implements TAttribute {
 		return true;
 	}
 
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("TAttributeImpl [");
+		if (name != null) {
+			builder.append("name=");
+			builder.append(name);
+			builder.append(", ");
+		}
+		if (types != null) {
+			builder.append("types=");
+			builder.append(types);
+			builder.append(", ");
+		}
+		if (genericType != null) {
+			builder.append("genericType=");
+			builder.append(genericType);
+			builder.append(", ");
+		}
+		if (annotations != null) {
+			builder.append("annotations=");
+			builder.append(annotations);
+			builder.append(", ");
+		}
+		if (modifiers != null) {
+			builder.append("modifiers=");
+			builder.append(modifiers);
+		}
+		builder.append("]");
+		return builder.toString();
+	}
+
 }
