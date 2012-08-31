@@ -1,5 +1,9 @@
 package ast.tools.core;
 
+import java.io.File;
+import java.io.IOException;
+
+import org.apache.commons.io.FileUtils;
 import org.eclipse.core.filebuffers.FileBuffers;
 import org.eclipse.core.filebuffers.ITextFileBuffer;
 import org.eclipse.core.filebuffers.ITextFileBufferManager;
@@ -17,9 +21,10 @@ import org.eclipse.text.edits.TextEdit;
 
 import ast.tools.context.ASTContext;
 import ast.tools.context.ASTWriter;
-import ast.tools.context.impl.ASTContextImpl;
+import ast.tools.helper.CompilationUnitHelper;
+import ast.tools.internal.context.impl.ASTContextImpl;
+import ast.tools.internal.visitor.ASTVisitor;
 import ast.tools.observer.ASTObservable;
-import ast.tools.visitor.ASTVisitor;
 
 public class ASTProcessor extends ASTObservable {
 	private ICompilationUnit iunit;
@@ -31,10 +36,32 @@ public class ASTProcessor extends ASTObservable {
 		this.init();
 	}
 
+	public ASTProcessor(File file) {
+		super();
+		try {
+			this.init(FileUtils.readFileToString(file).toCharArray());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public ASTProcessor(String source) {
+		super();
+		this.init(source.toCharArray());
+	}
+
 	private void init() {
 		ASTParser parser = ASTParser.newParser(AST.JLS3);
 		parser.setKind(ASTParser.K_COMPILATION_UNIT);
 		parser.setSource(iunit);
+		parser.setResolveBindings(true);
+		this.unit = (CompilationUnit) parser.createAST(null);
+	}
+
+	private void init(char[] source) {
+		ASTParser parser = ASTParser.newParser(AST.JLS3);
+		parser.setKind(ASTParser.K_COMPILATION_UNIT);
+		parser.setSource(source);
 		parser.setResolveBindings(true);
 		this.unit = (CompilationUnit) parser.createAST(null);
 	}
@@ -51,7 +78,10 @@ public class ASTProcessor extends ASTObservable {
 
 	public void write(ASTWriter writer) {
 		this.unit.recordModifications();
-		writer.write(this.unit, this.unit.getAST());
+		writer.write(new CompilationUnitHelper(this.unit), this.unit.getAST());
+	}
+
+	public void commit() {
 		ITextFileBufferManager bufferManager = FileBuffers.getTextFileBufferManager();
 		IPath path = this.unit.getJavaElement().getPath();
 		try {
