@@ -1,52 +1,41 @@
 package ast.tools.internal.visitor;
 
-import java.util.Collection;
-import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.collections.CollectionUtils;
-import org.eclipse.jdt.core.dom.BodyDeclaration;
 import org.eclipse.jdt.core.dom.FieldDeclaration;
-import org.eclipse.jdt.core.dom.MarkerAnnotation;
-import org.eclipse.jdt.core.dom.NormalAnnotation;
-import org.eclipse.jdt.core.dom.ParameterizedType;
-import org.eclipse.jdt.core.dom.SingleMemberAnnotation;
+import org.eclipse.jdt.core.dom.ImportDeclaration;
+import org.eclipse.jdt.core.dom.MethodDeclaration;
+import org.eclipse.jdt.core.dom.PackageDeclaration;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
-import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 
-import ast.tools.context.ASTContext;
 import ast.tools.core.ASTProcessor;
-import ast.tools.internal.context.impl.ASTContextImpl;
-import ast.tools.internal.model.impl.AttributeImpl;
-import ast.tools.internal.predicate.MarkerAnnotationPredicate;
-import ast.tools.internal.predicate.NormalAnnotationPredicate;
-import ast.tools.internal.predicate.SingleMemberAnnotationPredicate;
-import ast.tools.internal.transformer.MarkerAnnotationTransformer;
-import ast.tools.internal.transformer.NormalAnnotationTransformer;
-import ast.tools.internal.transformer.SingleMemberAnnotationTransformer;
-import ast.tools.model.Annotation;
-import ast.tools.model.Attribute;
+import ast.tools.internal.model.impl.TAttributeImpl;
+import ast.tools.internal.model.impl.TImportImpl;
+import ast.tools.internal.model.impl.TMethodImpl;
+import ast.tools.model.TAnnotation;
+import ast.tools.model.TAttribute;
+import ast.tools.model.TMethod;
+import ast.tools.model.TModifier;
+import ast.tools.model.TParameter;
 
-public class ASTVisitor extends org.eclipse.jdt.core.dom.ASTVisitor {
-	private ASTContext context;
-	private ASTProcessor processor;
-
-	private boolean isInterface = true;
-	private String className;
-	private String superClassName;
-	private Set<Annotation> annotations;
-	private Set<Attribute> attributes;
+public class ASTVisitor extends ExtendedASTVisitor {
 
 	public ASTVisitor(ASTProcessor processor) {
-		super();
-		this.annotations = new HashSet<Annotation>();
-		this.attributes = new HashSet<Attribute>();
-		this.processor = processor;
+		super(processor);
 	}
 
-	public ASTContext getContext() {
-		return this.context == null ? new ASTContextImpl(isInterface, className, superClassName, annotations, attributes)
-		: this.context;
+	@Override
+	public boolean visit(PackageDeclaration node) {
+		this.packageName = node.getName().toString();
+		return super.visit(node);
+	}
+
+	@Override
+	public boolean visit(ImportDeclaration node) {
+		imports.add(new TImportImpl(node.getName().toString()));
+		processor.notifyImportObservers(node.getName().toString());
+		return super.visit(node);
 	}
 
 	@Override
@@ -58,88 +47,56 @@ public class ASTVisitor extends org.eclipse.jdt.core.dom.ASTVisitor {
 			if (node.getSuperclassType() != null) {
 				this.superClassName = node.getSuperclassType().toString();
 			}
+			this.interfaces = getInterfaces(node);
 			this.annotations = processAnnotations(node);
-			processor.notifyClassObservers(className, superClassName, annotations);
+
+			// Notifica os observadores da classe (ASTClassObservers)
+			processor.notifyClassObservers(className, superClassName, annotations, interfaces);
+		} else {
+			this.className = node.getName().toString();
+			if (node.getSuperclassType() != null) {
+				this.superClassName = node.getSuperclassType().toString();
+			}
+			processor.notifyInterfaceObservers(this.className, this.superClassName);
 		}
 		return super.visit(node);
 	}
 
 	@Override
 	public boolean visit(FieldDeclaration declaration) {
-
 		String name = getName(declaration);
-		String type = getType(declaration);
+		List<String> types = getTypes(declaration);
 		String genericType = getGenericType(declaration);
-		Set<Annotation> attributeAnnotations = processAnnotations(declaration);
+		Set<TAnnotation> attributeAnnotations = processAnnotations(declaration);
+		Set<TModifier> modifiers = getModifiers(declaration);
 
-		Attribute attribute = new AttributeImpl(name, type, genericType, attributeAnnotations);
+		// cria o objeto TAttribute
+		TAttribute attribute = new TAttributeImpl(name, types, genericType, attributeAnnotations, modifiers);
+
 		this.attributes.add(attribute);
-		processor.notifyAttributeObservers(name, type, genericType, attributeAnnotations);
+
+		// notifica os observadores de attributos (ASTAttributeObservers)
+		processor.notifyAttributeObservers(name, types, genericType, modifiers ,attributeAnnotations);
 
 		return super.visit(declaration);
 	}
 
-	/**
-	 * Return attribute name
-	 * 
-	 * @param declaration
-	 * @return
-	 */
-	private String getName(FieldDeclaration declaration) {
-		return ((VariableDeclarationFragment) declaration.fragments().get(0)).getName().toString();
-	}
+	@Override
+	public boolean visit(MethodDeclaration declaration) {
+		String name = getName(declaration);
+		String returnGenericType = getReturnGenericType(declaration);
+		List<String> returnTypes = getReturnTypes(declaration);
+		Set<TAnnotation> methodAnnotations = processAnnotations(declaration);
+		Set<TModifier> modifiers = getModifiers(declaration);
+		Set<TParameter> parameters = getParameters(declaration);
 
-	/**
-	 * Return attribute type
-	 * 
-	 * @param declaration
-	 * @return
-	 */
-	private String getType(FieldDeclaration declaration) {
-		return declaration.getType().getClass() == ParameterizedType.class ? ((ParameterizedType) declaration.getType())
-				.getType().toString() : declaration.getType().toString();
-	}
+		TMethod method = new TMethodImpl(name, parameters, methodAnnotations, modifiers, returnTypes, returnGenericType);
 
-	/**
-	 * Return attribute generic type
-	 * 
-	 * @param declaration
-	 * @return
-	 */
-	private String getGenericType(FieldDeclaration declaration) {
-		return declaration.getType().getClass() == ParameterizedType.class ? ((ParameterizedType) declaration.getType())
-				.typeArguments().get(0).toString() : null;
-	}
+		this.methods.add(method);
 
-	private Set<Annotation> processAnnotations(BodyDeclaration declaration) {
-		Set<Annotation> annotationsSet = new HashSet<Annotation>();
+		processor.notifyMethodObservers(name, returnTypes, returnGenericType, modifiers, parameters, methodAnnotations);
 
-		annotationsSet.addAll(processSingleMemberAnnotation(declaration));
-		annotationsSet.addAll(processNormalAnnotation(declaration));
-		annotationsSet.addAll(processMarkerAnnotation(declaration));
-
-		return annotationsSet;
-	}
-
-	@SuppressWarnings("unchecked")
-	private Collection<Annotation> processMarkerAnnotation(BodyDeclaration node) {
-		Collection<MarkerAnnotation> markerAnnotationList = CollectionUtils.select(node.modifiers(),
-				new MarkerAnnotationPredicate());
-		return CollectionUtils.collect(markerAnnotationList, new MarkerAnnotationTransformer());
-	}
-
-	@SuppressWarnings("unchecked")
-	private Collection<Annotation> processSingleMemberAnnotation(BodyDeclaration node) {
-		Collection<SingleMemberAnnotation> singleMemberAnnotationList = CollectionUtils.select(node.modifiers(),
-				new SingleMemberAnnotationPredicate());
-		return CollectionUtils.collect(singleMemberAnnotationList, new SingleMemberAnnotationTransformer());
-	}
-
-	@SuppressWarnings("unchecked")
-	private Collection<Annotation> processNormalAnnotation(BodyDeclaration node) {
-		Collection<NormalAnnotation> normalAnnotationList = CollectionUtils.select(node.modifiers(),
-				new NormalAnnotationPredicate());
-		return CollectionUtils.collect(normalAnnotationList, new NormalAnnotationTransformer());
+		return super.visit(declaration);
 	}
 
 }

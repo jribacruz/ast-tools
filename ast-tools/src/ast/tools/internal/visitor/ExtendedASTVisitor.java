@@ -1,5 +1,6 @@
 package ast.tools.internal.visitor;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -13,12 +14,17 @@ import org.eclipse.jdt.core.dom.MarkerAnnotation;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.NormalAnnotation;
 import org.eclipse.jdt.core.dom.ParameterizedType;
+import org.eclipse.jdt.core.dom.SimpleType;
 import org.eclipse.jdt.core.dom.SingleMemberAnnotation;
+import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
+import org.eclipse.jdt.core.dom.Type;
+import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 
 import ast.tools.context.ASTContext;
 import ast.tools.core.ASTProcessor;
 import ast.tools.internal.context.impl.ASTContextImpl;
+import ast.tools.internal.model.impl.TParameterImpl;
 import ast.tools.internal.predicate.MarkerAnnotationPredicate;
 import ast.tools.internal.predicate.NormalAnnotationPredicate;
 import ast.tools.internal.predicate.SingleMemberAnnotationPredicate;
@@ -62,6 +68,13 @@ public class ExtendedASTVisitor extends ASTVisitor {
 	public ASTContext getContext() {
 		return this.context == null ? new ASTContextImpl(isInterface, className, superClassName, annotations, attributes,
 				methods, imports, interfaces, packageName) : this.context;
+	}
+
+	protected Set<String> getInterfaces(TypeDeclaration declaration) {
+		for (TypeDeclaration typeDeclaration : declaration.getTypes()) {
+			this.interfaces.add(typeDeclaration.getName().toString());
+		}
+		return new HashSet<String>();
 	}
 
 	/**
@@ -114,8 +127,15 @@ public class ExtendedASTVisitor extends ASTVisitor {
 	 * @return
 	 */
 	protected String getGenericType(FieldDeclaration declaration) {
-		return declaration.getType().getClass() == ParameterizedType.class ? ((ParameterizedType) declaration.getType())
-				.toString() : null;
+		Type type = declaration.getType();
+		if (type.getClass() == ParameterizedType.class) {
+			ParameterizedType parameterizedType = (ParameterizedType) type;
+			if (parameterizedType.getType().getClass() == SimpleType.class) {
+				SimpleType simpleType = (SimpleType) parameterizedType.getType();
+				return simpleType.getName().toString();
+			}
+		}
+		return "";
 	}
 
 	/**
@@ -124,20 +144,44 @@ public class ExtendedASTVisitor extends ASTVisitor {
 	 * @return
 	 */
 	protected String getReturnGenericType(MethodDeclaration declaration) {
-		return declaration.getReturnType2().getClass() == ParameterizedType.class ? ((ParameterizedType) declaration
-				.getReturnType2()).toString() : null;
+		Type type = declaration.getReturnType2();
+		if (type.getClass() == ParameterizedType.class) {
+			ParameterizedType parameterizedType = (ParameterizedType) type;
+			if (parameterizedType.getType().getClass() == SimpleType.class) {
+				SimpleType simpleType = (SimpleType) parameterizedType.getType();
+				return simpleType.getName().toString();
+			}
+		}
+		return "";
 	}
 
+	@SuppressWarnings("unchecked")
 	protected Set<TParameter> getParameters(MethodDeclaration declaration) {
-		return null;
+		Set<TParameter> parameters = new HashSet<TParameter>();
+
+		List<SingleVariableDeclaration> parameterList = declaration.parameters();
+		for (SingleVariableDeclaration singleVariableDeclaration : parameterList) {
+			String parameterName = singleVariableDeclaration.getName().toString();
+			String genericType = null;
+			List<String> types = new ArrayList<String>();
+
+			if (singleVariableDeclaration.getType().getClass() == ParameterizedType.class) {
+				ParameterizedType parameterizedType = (ParameterizedType) singleVariableDeclaration.getType();
+				types.addAll(parameterizedType.typeArguments());
+				genericType = parameterizedType.getType().toString();
+			} else {
+				types.add(singleVariableDeclaration.getType().toString());
+			}
+			parameters.add(new TParameterImpl(parameterName, types, genericType));
+		}
+
+		return parameters;
 	}
 
-	protected Set<TModifier> getModifiers(FieldDeclaration declaration) {
-		return null;
-	}
+	protected Set<TModifier> getModifiers(BodyDeclaration declaration) {
+		Set<TModifier> modifiers = new HashSet<TModifier>();
 
-	protected Set<TModifier> getModifiers(MethodDeclaration declaration) {
-		return null;
+		return modifiers;
 	}
 
 	protected Set<TAnnotation> processAnnotations(BodyDeclaration declaration) {
