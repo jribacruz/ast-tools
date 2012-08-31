@@ -3,7 +3,7 @@ package ast.tools.internal.transformer;
 import org.apache.commons.collections.Transformer;
 import org.eclipse.jdt.core.dom.MarkerAnnotation;
 
-import ast.tools.model.impl.AnnotationImpl;
+import ast.tools.internal.model.impl.AnnotationImpl;
 
 public class MarkerAnnotationTransformer implements Transformer {
 

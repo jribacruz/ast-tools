@@ -8,7 +8,7 @@ import org.eclipse.jdt.core.dom.NumberLiteral;
 import org.eclipse.jdt.core.dom.SingleMemberAnnotation;
 import org.eclipse.jdt.core.dom.StringLiteral;
 
-import ast.tools.model.impl.AnnotationImpl;
+import ast.tools.internal.model.impl.AnnotationImpl;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
