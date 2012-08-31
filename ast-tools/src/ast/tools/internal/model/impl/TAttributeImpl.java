@@ -4,6 +4,7 @@ import java.util.Set;
 
 import ast.tools.model.TAnnotation;
 import ast.tools.model.TAttribute;
+import ast.tools.model.TModifier;
 
 public class TAttributeImpl implements TAttribute {
 
@@ -11,28 +12,16 @@ public class TAttributeImpl implements TAttribute {
 	private String type;
 	private String genericType;
 	private Set<TAnnotation> annotations;
-	boolean _protected;
-	boolean _public;
-	boolean _private;
-	boolean _final;
-	boolean _static;
-	boolean _volatile;
-	boolean _transient;
+	private Set<TModifier> modifiers;
 
-	public TAttributeImpl(String name, String type, String genericType, Set<TAnnotation> annotations, boolean _protected,
-			boolean _public, boolean _private, boolean _final, boolean _static, boolean _volatile, boolean _transient) {
+	public TAttributeImpl(String name, String type, String genericType, Set<TAnnotation> annotations,
+			Set<TModifier> modifiers) {
 		super();
 		this.name = name;
 		this.type = type;
 		this.genericType = genericType;
 		this.annotations = annotations;
-		this._protected = _protected;
-		this._public = _public;
-		this._private = _private;
-		this._final = _final;
-		this._static = _static;
-		this._volatile = _volatile;
-		this._transient = _transient;
+		this.modifiers = modifiers;
 	}
 
 	@Override
@@ -53,6 +42,11 @@ public class TAttributeImpl implements TAttribute {
 	@Override
 	public Set<TAnnotation> getAnnotations() {
 		return this.annotations;
+	}
+
+	@Override
+	public Set<TModifier> getModifiers() {
+		return this.modifiers;
 	}
 
 	@Override
@@ -83,41 +77,6 @@ public class TAttributeImpl implements TAttribute {
 			return false;
 		}
 		return true;
-	}
-
-	@Override
-	public boolean isProtected() {
-		return this._protected;
-	}
-
-	@Override
-	public boolean isPublic() {
-		return this._public;
-	}
-
-	@Override
-	public boolean isPrivate() {
-		return this._private;
-	}
-
-	@Override
-	public boolean isFinal() {
-		return this._final;
-	}
-
-	@Override
-	public boolean isStatic() {
-		return this._static;
-	}
-
-	@Override
-	public boolean isVolatile() {
-		return this._volatile;
-	}
-
-	@Override
-	public boolean isTransient() {
-		return this._transient;
 	}
 
 	@Override
