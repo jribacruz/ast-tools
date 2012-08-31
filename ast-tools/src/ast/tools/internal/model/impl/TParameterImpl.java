@@ -1,17 +1,19 @@
 package ast.tools.internal.model.impl;
 
+import java.util.List;
+
 import ast.tools.model.TParameter;
 
 public class TParameterImpl implements TParameter {
 
 	private String name;
-	private String type;
+	private List<String> types;
 	private String genericType;
 
-	public TParameterImpl(String name, String type, String genericType) {
+	public TParameterImpl(String name, List<String> types, String genericType) {
 		super();
 		this.name = name;
-		this.type = type;
+		this.types = types;
 		this.genericType = genericType;
 	}
 
@@ -21,8 +23,8 @@ public class TParameterImpl implements TParameter {
 	}
 
 	@Override
-	public String getType() {
-		return this.type;
+	public List<String> getTypes() {
+		return this.types;
 	}
 
 	@Override
@@ -36,7 +38,7 @@ public class TParameterImpl implements TParameter {
 		int result = 1;
 		result = prime * result + ((genericType == null) ? 0 : genericType.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime * result + ((type == null) ? 0 : type.hashCode());
+		result = prime * result + ((types == null) ? 0 : types.hashCode());
 		return result;
 	}
 
@@ -66,11 +68,11 @@ public class TParameterImpl implements TParameter {
 		} else if (!name.equals(other.name)) {
 			return false;
 		}
-		if (type == null) {
-			if (other.type != null) {
+		if (types == null) {
+			if (other.types != null) {
 				return false;
 			}
-		} else if (!type.equals(other.type)) {
+		} else if (!types.equals(other.types)) {
 			return false;
 		}
 		return true;
@@ -85,9 +87,9 @@ public class TParameterImpl implements TParameter {
 			builder.append(name);
 			builder.append(", ");
 		}
-		if (type != null) {
+		if (types != null) {
 			builder.append("type=");
-			builder.append(type);
+			builder.append(types);
 			builder.append(", ");
 		}
 		if (genericType != null) {
