@@ -9,8 +9,8 @@ import org.eclipse.jdt.core.ICompilationUnit;
 import ast.tools.context.ASTContext;
 import ast.tools.core.ASTPredicate;
 import ast.tools.core.ASTProcessor;
-import ast.tools.internal.model.impl.AnnotationImpl;
-import ast.tools.model.Annotation;
+import ast.tools.internal.model.impl.TAnnotationImpl;
+import ast.tools.model.TAnnotation;
 
 public class ASTUtils {
 	public static ICompilationUnit find(ICompilationUnit[] units, ASTPredicate predicate) {
@@ -34,8 +34,8 @@ public class ASTUtils {
 		return unitList.toArray(new ICompilationUnit[] {});
 	}
 
-	public static boolean containsAnnotation(Set<Annotation> annotations, String name) {
-		return annotations.contains(new AnnotationImpl(name));
+	public static boolean containsAnnotation(Set<TAnnotation> annotations, String name) {
+		return annotations.contains(new TAnnotationImpl(name));
 	}
 
 }
