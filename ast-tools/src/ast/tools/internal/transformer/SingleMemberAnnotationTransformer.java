@@ -8,7 +8,7 @@ import org.eclipse.jdt.core.dom.NumberLiteral;
 import org.eclipse.jdt.core.dom.SingleMemberAnnotation;
 import org.eclipse.jdt.core.dom.StringLiteral;
 
-import ast.tools.internal.model.impl.AnnotationImpl;
+import ast.tools.internal.model.impl.TAnnotationImpl;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
@@ -24,7 +24,7 @@ public class SingleMemberAnnotationTransformer implements Transformer {
 		SingleMemberAnnotation singleMemberAnnotation = (SingleMemberAnnotation) annotation;
 		String name = singleMemberAnnotation.getTypeName().toString();
 		Multimap<String, Object> value = getValue(singleMemberAnnotation);
-		return new AnnotationImpl(name, value);
+		return new TAnnotationImpl(name, value);
 	}
 
 	public Multimap<String, Object> getValue(SingleMemberAnnotation annotation) {

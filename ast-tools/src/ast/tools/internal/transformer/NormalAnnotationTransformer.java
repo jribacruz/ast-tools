@@ -11,7 +11,7 @@ import org.eclipse.jdt.core.dom.NumberLiteral;
 import org.eclipse.jdt.core.dom.QualifiedName;
 import org.eclipse.jdt.core.dom.StringLiteral;
 
-import ast.tools.internal.model.impl.AnnotationImpl;
+import ast.tools.internal.model.impl.TAnnotationImpl;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
@@ -28,7 +28,7 @@ public class NormalAnnotationTransformer implements Transformer {
 			MemberValuePair pair = (MemberValuePair) iter.next();
 			value.putAll(getValue(pair));
 		}
-		return new AnnotationImpl(name, value);
+		return new TAnnotationImpl(name, value);
 	}
 
 	public Multimap<String, Object> getValue(MemberValuePair pair) {
