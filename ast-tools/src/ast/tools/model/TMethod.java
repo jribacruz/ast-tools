@@ -8,7 +8,9 @@ public interface TMethod {
 
 	List<TParameter> getParameters();
 
-	String getReturnType();
+	List<String> getReturnTypes();
+
+	String getReturnGenericType();
 
 	Set<TAnnotation> getAnnotations();
 

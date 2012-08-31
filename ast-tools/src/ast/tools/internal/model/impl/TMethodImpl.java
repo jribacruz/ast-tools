@@ -12,9 +12,10 @@ public class TMethodImpl implements TMethod {
 
 	private String name;
 	private List<TParameter> parameters;
-	private String returnType;
 	private Set<TAnnotation> annotations;
 	private Set<TModifier> modifiers;
+	private List<String> returnTypes;
+	private String returnGenericType;
 
 	@Override
 	public String getName() {
@@ -27,11 +28,6 @@ public class TMethodImpl implements TMethod {
 	}
 
 	@Override
-	public String getReturnType() {
-		return this.returnType;
-	}
-
-	@Override
 	public Set<TAnnotation> getAnnotations() {
 		return this.annotations;
 	}
@@ -39,6 +35,16 @@ public class TMethodImpl implements TMethod {
 	@Override
 	public Set<TModifier> getModifiers() {
 		return modifiers;
+	}
+
+	@Override
+	public List<String> getReturnTypes() {
+		return this.returnTypes;
+	}
+
+	@Override
+	public String getReturnGenericType() {
+		return this.returnGenericType;
 	}
 
 }

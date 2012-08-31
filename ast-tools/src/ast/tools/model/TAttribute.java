@@ -1,11 +1,12 @@
 package ast.tools.model;
 
+import java.util.List;
 import java.util.Set;
 
 public interface TAttribute {
 	String getName();
 
-	String getType();
+	List<String> getTypes();
 
 	String getGenericType();
 

@@ -1,5 +1,6 @@
 package ast.tools.internal.model.impl;
 
+import java.util.List;
 import java.util.Set;
 
 import ast.tools.model.TAnnotation;
@@ -13,15 +14,17 @@ public class TAttributeImpl implements TAttribute {
 	private String genericType;
 	private Set<TAnnotation> annotations;
 	private Set<TModifier> modifiers;
+	private List<String> types;
 
 	public TAttributeImpl(String name, String type, String genericType, Set<TAnnotation> annotations,
-			Set<TModifier> modifiers) {
+			Set<TModifier> modifiers, List<String> types) {
 		super();
 		this.name = name;
 		this.type = type;
 		this.genericType = genericType;
 		this.annotations = annotations;
 		this.modifiers = modifiers;
+		this.types = types;
 	}
 
 	@Override
@@ -30,13 +33,13 @@ public class TAttributeImpl implements TAttribute {
 	}
 
 	@Override
-	public String getType() {
-		return this.type;
+	public String getGenericType() {
+		return this.genericType;
 	}
 
 	@Override
-	public String getGenericType() {
-		return this.genericType;
+	public List<String> getTypes() {
+		return this.types;
 	}
 
 	@Override
