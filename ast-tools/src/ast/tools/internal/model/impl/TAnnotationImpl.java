@@ -2,27 +2,27 @@ package ast.tools.internal.model.impl;
 
 import java.util.ArrayList;
 
-import ast.tools.model.Annotation;
+import ast.tools.model.TAnnotation;
 
 import com.google.common.collect.Multimap;
 
-public class AnnotationImpl implements Annotation {
+public class TAnnotationImpl implements TAnnotation {
 
 	private String name;
 
 	private Multimap<String, Object> value;
 
-	public AnnotationImpl() {
+	public TAnnotationImpl() {
 		super();
 	}
 
-	public AnnotationImpl(String name, Multimap<String, Object> value) {
+	public TAnnotationImpl(String name, Multimap<String, Object> value) {
 		super();
 		this.name = name;
 		this.value = value;
 	}
 
-	public AnnotationImpl(String name) {
+	public TAnnotationImpl(String name) {
 		super();
 		this.name = name;
 	}
@@ -74,9 +74,9 @@ public class AnnotationImpl implements Annotation {
 	}
 
 	@Override
-	public Annotation getAnnotation(String key) {
-		return (Annotation) (this.value.containsKey(key) && this.value.size() > 0 ? new ArrayList<Object>(
-				this.value.get(key)).get(0) : new AnnotationImpl());
+	public TAnnotation getAnnotation(String key) {
+		return (TAnnotation) (this.value.containsKey(key) && this.value.size() > 0 ? new ArrayList<Object>(
+				this.value.get(key)).get(0) : new TAnnotationImpl());
 	}
 
 	@Override
@@ -98,7 +98,7 @@ public class AnnotationImpl implements Annotation {
 		if (getClass() != obj.getClass()) {
 			return false;
 		}
-		AnnotationImpl other = (AnnotationImpl) obj;
+		TAnnotationImpl other = (TAnnotationImpl) obj;
 		if (name == null) {
 			if (other.name != null) {
 				return false;

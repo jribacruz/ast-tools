@@ -2,22 +2,37 @@ package ast.tools.internal.model.impl;
 
 import java.util.Set;
 
-import ast.tools.model.Annotation;
-import ast.tools.model.Attribute;
+import ast.tools.model.TAnnotation;
+import ast.tools.model.TAttribute;
 
-public class AttributeImpl implements Attribute {
+public class TAttributeImpl implements TAttribute {
 
 	private String name;
 	private String type;
 	private String genericType;
-	private Set<Annotation> annotations;
+	private Set<TAnnotation> annotations;
+	boolean _protected;
+	boolean _public;
+	boolean _private;
+	boolean _final;
+	boolean _static;
+	boolean _volatile;
+	boolean _transient;
 
-	public AttributeImpl(String name, String type, String genericType, Set<Annotation> annotations) {
+	public TAttributeImpl(String name, String type, String genericType, Set<TAnnotation> annotations, boolean _protected,
+			boolean _public, boolean _private, boolean _final, boolean _static, boolean _volatile, boolean _transient) {
 		super();
 		this.name = name;
 		this.type = type;
 		this.genericType = genericType;
 		this.annotations = annotations;
+		this._protected = _protected;
+		this._public = _public;
+		this._private = _private;
+		this._final = _final;
+		this._static = _static;
+		this._volatile = _volatile;
+		this._transient = _transient;
 	}
 
 	@Override
@@ -36,7 +51,7 @@ public class AttributeImpl implements Attribute {
 	}
 
 	@Override
-	public Set<Annotation> getAnnotations() {
+	public Set<TAnnotation> getAnnotations() {
 		return this.annotations;
 	}
 
@@ -59,7 +74,7 @@ public class AttributeImpl implements Attribute {
 		if (getClass() != obj.getClass()) {
 			return false;
 		}
-		AttributeImpl other = (AttributeImpl) obj;
+		TAttributeImpl other = (TAttributeImpl) obj;
 		if (name == null) {
 			if (other.name != null) {
 				return false;
@@ -68,6 +83,41 @@ public class AttributeImpl implements Attribute {
 			return false;
 		}
 		return true;
+	}
+
+	@Override
+	public boolean isProtected() {
+		return this._protected;
+	}
+
+	@Override
+	public boolean isPublic() {
+		return this._public;
+	}
+
+	@Override
+	public boolean isPrivate() {
+		return this._private;
+	}
+
+	@Override
+	public boolean isFinal() {
+		return this._final;
+	}
+
+	@Override
+	public boolean isStatic() {
+		return this._static;
+	}
+
+	@Override
+	public boolean isVolatile() {
+		return this._volatile;
+	}
+
+	@Override
+	public boolean isTransient() {
+		return this._transient;
 	}
 
 	@Override
