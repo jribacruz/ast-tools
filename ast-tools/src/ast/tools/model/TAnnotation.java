@@ -1,6 +1,6 @@
 package ast.tools.model;
 
-public interface Annotation {
+public interface TAnnotation {
 	String getName();
 
 	String getString(String key);
@@ -17,5 +17,5 @@ public interface Annotation {
 
 	Long[] getLongArray(String key);
 
-	Annotation getAnnotation(String key);
+	TAnnotation getAnnotation(String key);
 }
