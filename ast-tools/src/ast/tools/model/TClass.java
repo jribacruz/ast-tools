@@ -1,5 +1,6 @@
 package ast.tools.model;
 
+import java.util.List;
 import java.util.Set;
 
 public interface TClass {
@@ -8,9 +9,11 @@ public interface TClass {
 
 	String getPackageName();
 
+	List<String> getGenericTypeArguments();
+
 	TClass getSuperClass();
 
-	Set<String> getInterfaces();
+	Set<TInterface> getInterfaces();
 
 	Set<TAnnotation> getAnnotations();
 
