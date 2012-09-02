@@ -1,10 +1,12 @@
 package ast.tools.context;
 
+import java.util.List;
 import java.util.Set;
 
 import ast.tools.model.TAnnotation;
 import ast.tools.model.TAttribute;
 import ast.tools.model.TImport;
+import ast.tools.model.TInterface;
 import ast.tools.model.TMethod;
 
 public interface ASTContext {
@@ -16,7 +18,11 @@ public interface ASTContext {
 
 	String getSuperClassName();
 
-	Set<String> getInterfaces();
+	List<String> getGenericTypeArguments();
+
+	List<String> getSuperClassGenericTypeArguments();
+
+	Set<TInterface> getInterfaces();
 
 	Set<TAnnotation> getAnnotations();
 
