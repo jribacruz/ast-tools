@@ -9,7 +9,9 @@ import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.PackageDeclaration;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 
+import ast.tools.context.ASTContext;
 import ast.tools.core.ASTProcessor;
+import ast.tools.internal.context.impl.ASTContextImpl;
 import ast.tools.internal.model.impl.TAttributeImpl;
 import ast.tools.internal.model.impl.TImportImpl;
 import ast.tools.internal.model.impl.TMethodImpl;
@@ -21,8 +23,12 @@ import ast.tools.model.TParameter;
 
 public class ASTVisitor extends ExtendedASTVisitor {
 
+	protected ASTContext context;
+	protected ASTProcessor processor;
+
 	public ASTVisitor(ASTProcessor processor) {
-		super(processor);
+		super();
+		this.processor = processor;
 	}
 
 	@Override
@@ -38,28 +44,28 @@ public class ASTVisitor extends ExtendedASTVisitor {
 		return super.visit(node);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
-	public boolean visit(TypeDeclaration node) {
+	public boolean visit(TypeDeclaration declaration) {
 
-		if (!node.isInterface()) {
+		if (!declaration.isInterface()) {
 			this.isInterface = false;
-			this.className = node.getName().toString();
-			if (node.getSuperclassType() != null) {
-				this.superClassName = node.getSuperclassType().toString();
-			}
-			this.interfaces = getInterfaces(node);
-			this.annotations = processAnnotations(node);
-
+			this.className = declaration.getName().toString();
+			this.genericTypeArguments.addAll(declaration.typeParameters());
+			this.superClassName = getSuperClassName(declaration);
+			this.interfaces = getInterfaces(declaration);
+			this.annotations = processAnnotations(declaration);
 			// Notifica os observadores da classe (ASTClassObservers)
-			processor.notifyClassObservers(className, superClassName, annotations, interfaces);
+			processor.notifyClassObservers(this.className, this.genericTypeArguments, this.superClassName,
+					this.superClassGenericTypeArguments, this.annotations, this.interfaces);
 		} else {
-			this.className = node.getName().toString();
-			if (node.getSuperclassType() != null) {
-				this.superClassName = node.getSuperclassType().toString();
+			this.className = declaration.getName().toString();
+			if (declaration.getSuperclassType() != null) {
+				// this.superClassName = node.getSuperclassType().toString();
 			}
-			processor.notifyInterfaceObservers(this.className, this.superClassName);
+			processor.notifyInterfaceObservers(this.className, this.superClassName, this.genericTypeArguments);
 		}
-		return super.visit(node);
+		return super.visit(declaration);
 	}
 
 	@Override
@@ -76,7 +82,7 @@ public class ASTVisitor extends ExtendedASTVisitor {
 		this.attributes.add(attribute);
 
 		// notifica os observadores de attributos (ASTAttributeObservers)
-		processor.notifyAttributeObservers(name, types, genericType, modifiers ,attributeAnnotations);
+		processor.notifyAttributeObservers(name, types, genericType, modifiers, attributeAnnotations);
 
 		return super.visit(declaration);
 	}
@@ -97,6 +103,12 @@ public class ASTVisitor extends ExtendedASTVisitor {
 		processor.notifyMethodObservers(name, returnTypes, returnGenericType, modifiers, parameters, methodAnnotations);
 
 		return super.visit(declaration);
+	}
+
+	public ASTContext getContext() {
+		return this.context == null ? new ASTContextImpl(isInterface, className, annotations, attributes, methods, imports,
+				interfaces, packageName, superClassName, genericTypeArguments, this.superClassGenericTypeArguments)
+		: this.context;
 	}
 
 }

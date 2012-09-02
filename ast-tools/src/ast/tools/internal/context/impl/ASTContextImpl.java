@@ -1,43 +1,50 @@
 package ast.tools.internal.context.impl;
 
+import java.util.List;
 import java.util.Set;
 
 import ast.tools.context.ASTContext;
 import ast.tools.model.TAnnotation;
 import ast.tools.model.TAttribute;
 import ast.tools.model.TImport;
+import ast.tools.model.TInterface;
 import ast.tools.model.TMethod;
 
 public class ASTContextImpl implements ASTContext {
 
 	private boolean isInterface;
 	private String className;
-	private String superClassName;
 	private Set<TAnnotation> annotations;
 	private Set<TAttribute> attributes;
 	private Set<TMethod> methods;
 	private Set<TImport> imports;
-	private Set<String> interfaces;
+	private Set<TInterface> interfaces;
 	private String packageName;
+	private String superClassName;
+	private List<String> genericTypeArguments;
+	private List<String> superClassGenericTypeArguments;
 
 	public ASTContextImpl() {
 		super();
 	}
 
-	public ASTContextImpl(boolean isInterface, String className, String superClassName, Set<TAnnotation> annotations,
-			Set<TAttribute> attributes, Set<TMethod> methods, Set<TImport> imports, Set<String> interfaces,
-			String packageName) {
+	public ASTContextImpl(boolean isInterface, String className, Set<TAnnotation> annotations, Set<TAttribute> attributes,
+			Set<TMethod> methods, Set<TImport> imports, Set<TInterface> interfaces, String packageName,
+			String superClassName, List<String> genericTypeArguments, List<String> superClassGenericTypeArguments) {
 		super();
 		this.isInterface = isInterface;
 		this.className = className;
-		this.superClassName = superClassName;
 		this.annotations = annotations;
 		this.attributes = attributes;
 		this.methods = methods;
 		this.imports = imports;
 		this.interfaces = interfaces;
 		this.packageName = packageName;
+		this.superClassName = superClassName;
+		this.genericTypeArguments = genericTypeArguments;
+		this.superClassGenericTypeArguments = superClassGenericTypeArguments;
 	}
+
 
 	@Override
 	public boolean isInterface() {
@@ -47,11 +54,6 @@ public class ASTContextImpl implements ASTContext {
 	@Override
 	public String getClassName() {
 		return this.className;
-	}
-
-	@Override
-	public String getSuperClassName() {
-		return this.superClassName;
 	}
 
 	@Override
@@ -75,13 +77,28 @@ public class ASTContextImpl implements ASTContext {
 	}
 
 	@Override
-	public Set<String> getInterfaces() {
+	public Set<TInterface> getInterfaces() {
 		return this.interfaces;
 	}
 
 	@Override
 	public String getPackageName() {
 		return this.packageName;
+	}
+
+	@Override
+	public List<String> getGenericTypeArguments() {
+		return this.genericTypeArguments;
+	}
+
+	@Override
+	public String getSuperClassName() {
+		return this.superClassName;
+	}
+
+	@Override
+	public List<String> getSuperClassGenericTypeArguments() {
+		return this.superClassGenericTypeArguments;
 	}
 
 }
