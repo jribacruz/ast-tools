@@ -21,9 +21,6 @@ import org.eclipse.jdt.core.dom.Type;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 
-import ast.tools.context.ASTContext;
-import ast.tools.core.ASTProcessor;
-import ast.tools.internal.context.impl.ASTContextImpl;
 import ast.tools.internal.model.impl.TParameterImpl;
 import ast.tools.internal.predicate.MarkerAnnotationPredicate;
 import ast.tools.internal.predicate.NormalAnnotationPredicate;
@@ -33,7 +30,9 @@ import ast.tools.internal.transformer.NormalAnnotationTransformer;
 import ast.tools.internal.transformer.SingleMemberAnnotationTransformer;
 import ast.tools.model.TAnnotation;
 import ast.tools.model.TAttribute;
+import ast.tools.model.TClass;
 import ast.tools.model.TImport;
+import ast.tools.model.TInterface;
 import ast.tools.model.TMethod;
 import ast.tools.model.TModifier;
 import ast.tools.model.TParameter;
@@ -41,8 +40,8 @@ import ast.tools.model.TParameter;
 import com.google.common.collect.Lists;
 
 public class ExtendedASTVisitor extends ASTVisitor {
-	protected ASTContext context;
-	protected ASTProcessor processor;
+
+	protected TClass klass;
 
 	protected boolean isInterface = true;
 	protected String className;
@@ -52,29 +51,42 @@ public class ExtendedASTVisitor extends ASTVisitor {
 	protected Set<TAttribute> attributes;
 	protected Set<TMethod> methods;
 	protected Set<TImport> imports;
-	protected Set<String> interfaces;
+	protected Set<TInterface> interfaces;
+	protected List<String> genericTypeArguments;
+	protected List<String> superClassGenericTypeArguments;
 
-	public ExtendedASTVisitor(ASTProcessor processor) {
+	public ExtendedASTVisitor() {
 		super();
-		this.processor = processor;
 		this.annotations = new HashSet<TAnnotation>();
 		this.attributes = new HashSet<TAttribute>();
 		this.methods = new HashSet<TMethod>();
 		this.imports = new HashSet<TImport>();
-		this.interfaces = new HashSet<String>();
+		this.interfaces = new HashSet<TInterface>();
+		this.genericTypeArguments = new ArrayList<String>();
+		this.superClassGenericTypeArguments = new ArrayList<String>();
 
 	}
 
-	public ASTContext getContext() {
-		return this.context == null ? new ASTContextImpl(isInterface, className, superClassName, annotations, attributes,
-				methods, imports, interfaces, packageName) : this.context;
-	}
+	protected Set<TInterface> getInterfaces(TypeDeclaration declaration) {
+		if(declaration.isInterface()) {
 
-	protected Set<String> getInterfaces(TypeDeclaration declaration) {
-		for (TypeDeclaration typeDeclaration : declaration.getTypes()) {
-			this.interfaces.add(typeDeclaration.getName().toString());
 		}
-		return new HashSet<String>();
+		return null;
+	}
+
+	@SuppressWarnings("unchecked")
+	protected String getSuperClassName(TypeDeclaration declaration) {
+		if (declaration.getSuperclassType() != null) {
+			if(declaration.getSuperclassType().isSimpleType()) {
+				SimpleType simpleType = (SimpleType) declaration.getSuperclassType();
+				this.superClassName = simpleType.getName().toString();
+			} else if(declaration.getSuperclassType().isParameterizedType()) {
+				ParameterizedType parameterizedType = (ParameterizedType) declaration.getSuperclassType();
+				this.superClassName = parameterizedType.getType().toString();
+				this.superClassGenericTypeArguments.addAll(parameterizedType.typeArguments());
+			}
+		}
+		return this.superClassName;
 	}
 
 	/**
@@ -178,9 +190,10 @@ public class ExtendedASTVisitor extends ASTVisitor {
 		return parameters;
 	}
 
+	@SuppressWarnings("unchecked")
 	protected Set<TModifier> getModifiers(BodyDeclaration declaration) {
 		Set<TModifier> modifiers = new HashSet<TModifier>();
-
+		modifiers.addAll(declaration.modifiers());
 		return modifiers;
 	}
 
