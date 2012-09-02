@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 import ast.tools.model.TAnnotation;
+import ast.tools.model.TInterface;
 import ast.tools.model.TModifier;
 import ast.tools.model.TParameter;
 import ast.tools.observer.ASTAttributeObserver;
@@ -37,12 +38,13 @@ public class ASTObservable {
 	 * @param annotations
 	 * @param interfaces
 	 */
-	public void notifyClassObservers(String className, String superClassName, Set<TAnnotation> annotations,
-			Set<String> interfaces) {
+	public void notifyClassObservers(String className, List<String> genericTypeArguments, String superClassName,
+			List<String> superClassGenericTypeArguments, Set<TAnnotation> annotations, Set<TInterface> interfaces) {
 		Iterator<ASTClassObserver> iterator = classObservers.iterator();
 		while (iterator.hasNext()) {
 			ASTClassObserver classObserver = iterator.next();
-			classObserver.update(className, superClassName, annotations, interfaces);
+			classObserver.update(className, genericTypeArguments, superClassName, superClassGenericTypeArguments,
+					annotations, interfaces);
 		}
 	}
 
@@ -97,11 +99,11 @@ public class ASTObservable {
 	 * 
 	 * @param name
 	 */
-	public void notifyInterfaceObservers(String name, String superInterfaceName) {
+	public void notifyInterfaceObservers(String name, String superInterface, List<String> genericTypeArguments) {
 		Iterator<ASTInterfaceObserver> iterator = interfaceObservers.iterator();
 		while (iterator.hasNext()) {
 			ASTInterfaceObserver interfaceObserver = iterator.next();
-			interfaceObserver.update(name, superInterfaceName);
+			interfaceObserver.update(name, superInterface, genericTypeArguments);
 		}
 	}
 
