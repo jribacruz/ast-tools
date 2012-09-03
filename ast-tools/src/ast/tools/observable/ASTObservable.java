@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Set;
 
 import ast.tools.model.TAnnotation;
-import ast.tools.model.TInterface;
 import ast.tools.model.TModifier;
 import ast.tools.model.TParameter;
 import ast.tools.observer.ASTAttributeObserver;
@@ -39,7 +38,7 @@ public class ASTObservable {
 	 * @param interfaces
 	 */
 	public void notifyClassObservers(String className, List<String> genericTypeArguments, String superClassName,
-			List<String> superClassGenericTypeArguments, Set<TAnnotation> annotations, Set<TInterface> interfaces) {
+			List<String> superClassGenericTypeArguments, Set<TAnnotation> annotations, Set<String> interfaces) {
 		Iterator<ASTClassObserver> iterator = classObservers.iterator();
 		while (iterator.hasNext()) {
 			ASTClassObserver classObserver = iterator.next();
