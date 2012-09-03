@@ -1,6 +1,7 @@
 package ast.tools.helper;
 
-import java.util.List;
+import java.util.Iterator;
+import java.util.Set;
 
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.Block;
@@ -9,43 +10,53 @@ import org.eclipse.jdt.core.dom.ParameterizedType;
 import org.eclipse.jdt.core.dom.PrimitiveType;
 import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
 
+import ast.tools.model.TModifier;
+
 public class MethodDeclarationHelper {
 	private String name;
-	private int modifier;
+	private Set<TModifier> modifiers;
 	private boolean constructor;
 	private Block body;
 	private AST ast;
 	private MethodDeclaration declaration;
 
-	public MethodDeclarationHelper(AST ast, String name, int modifier, boolean constructor) {
+	public MethodDeclarationHelper(AST ast, String name, Set<TModifier> modifier, boolean constructor) {
 		super();
 		this.name = name;
-		this.modifier = modifier;
+		this.modifiers = modifier;
 		this.constructor = constructor;
 		this.ast = ast;
 		this.declaration = ast.newMethodDeclaration();
 		this.init();
 	}
 
-	public MethodDeclarationHelper(AST ast, String name, int modifier) {
+	public MethodDeclarationHelper(AST ast, String name, Set<TModifier> modifier) {
 		super();
 		this.name = name;
-		this.modifier = modifier;
+		this.modifiers = modifier;
 		this.constructor = false;
 		this.ast = ast;
 		this.declaration = ast.newMethodDeclaration();
 		this.init();
 	}
 
-	@SuppressWarnings("unchecked")
 	private void init() {
 		declaration.setName(ast.newSimpleName(this.name));
-		List<?> declarationModifier = ast.newModifiers(this.modifier);
-		declaration.modifiers().add(declarationModifier.get(0));
 		declaration.setConstructor(this.constructor);
 		this.body = ast.newBlock();
 		declaration.setBody(this.body);
+		this.setModifiers();
 	}
+
+	@SuppressWarnings("unchecked")
+	private void setModifiers() {
+		Iterator<TModifier> iterator = this.modifiers.iterator();
+		while(iterator.hasNext()) {
+			TModifier modifier = iterator.next();
+			this.declaration.modifiers().addAll(ast.newModifiers(modifier.getModifierType()));
+		}
+	}
+
 
 	public MethodDeclaration getMethodDeclaration() {
 		return this.declaration;
