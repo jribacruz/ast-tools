@@ -16,9 +16,10 @@ public class TMethodImpl implements TMethod {
 	private Set<TModifier> modifiers;
 	private List<String> returnTypes;
 	private String returnGenericType;
+	private boolean constructor;
 
 	public TMethodImpl(String name, Set<TParameter> parameters, Set<TAnnotation> annotations, Set<TModifier> modifiers,
-			List<String> returnTypes, String returnGenericType) {
+			List<String> returnTypes, String returnGenericType, boolean constructor) {
 		super();
 		this.name = name;
 		this.parameters = parameters;
@@ -26,6 +27,7 @@ public class TMethodImpl implements TMethod {
 		this.modifiers = modifiers;
 		this.returnTypes = returnTypes;
 		this.returnGenericType = returnGenericType;
+		this.constructor = constructor;
 	}
 
 	@Override
@@ -56,6 +58,11 @@ public class TMethodImpl implements TMethod {
 	@Override
 	public String getReturnGenericType() {
 		return this.returnGenericType;
+	}
+
+	@Override
+	public boolean isConstructor() {
+		return this.constructor;
 	}
 
 	@Override

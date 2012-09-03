@@ -91,12 +91,13 @@ public class ASTVisitor extends ExtendedASTVisitor {
 	public boolean visit(MethodDeclaration declaration) {
 		String name = getName(declaration);
 		String returnGenericType = getReturnGenericType(declaration);
+		boolean constructor = declaration.getReturnType2() == null;
 		List<String> returnTypes = getReturnTypes(declaration);
 		Set<TAnnotation> methodAnnotations = processAnnotations(declaration);
 		Set<TModifier> modifiers = getModifiers(declaration);
 		Set<TParameter> parameters = getParameters(declaration);
 
-		TMethod method = new TMethodImpl(name, parameters, methodAnnotations, modifiers, returnTypes, returnGenericType);
+		TMethod method = new TMethodImpl(name, parameters, methodAnnotations, modifiers, returnTypes, returnGenericType, constructor);
 
 		this.methods.add(method);
 
@@ -107,7 +108,7 @@ public class ASTVisitor extends ExtendedASTVisitor {
 
 	public ASTContext getContext() {
 		return this.context == null ? new ASTContextImpl(isInterface, className, annotations, attributes, methods, imports,
-				interfaces, packageName, superClassName, genericTypeArguments, this.superClassGenericTypeArguments)
+				interfaces, packageName, superClassName, genericTypeArguments, superClassGenericTypeArguments)
 		: this.context;
 	}
 

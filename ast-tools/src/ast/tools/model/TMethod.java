@@ -6,6 +6,8 @@ import java.util.Set;
 public interface TMethod {
 	String getName();
 
+	boolean isConstructor();
+
 	Set<TParameter> getParameters();
 
 	List<String> getReturnTypes();

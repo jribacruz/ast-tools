@@ -45,7 +45,6 @@ public class ASTContextImpl implements ASTContext {
 		this.superClassGenericTypeArguments = superClassGenericTypeArguments;
 	}
 
-
 	@Override
 	public boolean isInterface() {
 		return this.isInterface;
@@ -99,6 +98,65 @@ public class ASTContextImpl implements ASTContext {
 	@Override
 	public List<String> getSuperClassGenericTypeArguments() {
 		return this.superClassGenericTypeArguments;
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("ASTContextImpl [isInterface=");
+		builder.append(isInterface);
+		builder.append(", ");
+		if (className != null) {
+			builder.append("className=");
+			builder.append(className);
+			builder.append(", ");
+		}
+		if (annotations != null) {
+			builder.append("annotations=");
+			builder.append(annotations);
+			builder.append(", ");
+		}
+		if (attributes != null) {
+			builder.append("attributes=");
+			builder.append(attributes);
+			builder.append(", ");
+		}
+		if (methods != null) {
+			builder.append("methods=");
+			builder.append(methods);
+			builder.append(", ");
+		}
+		if (imports != null) {
+			builder.append("imports=");
+			builder.append(imports);
+			builder.append(", ");
+		}
+		if (interfaces != null) {
+			builder.append("interfaces=");
+			builder.append(interfaces);
+			builder.append(", ");
+		}
+		if (packageName != null) {
+			builder.append("packageName=");
+			builder.append(packageName);
+			builder.append(", ");
+		}
+		if (superClassName != null) {
+			builder.append("superClassName=");
+			builder.append(superClassName);
+			builder.append(", ");
+		}
+		if (genericTypeArguments != null) {
+			builder.append("genericTypeArguments=");
+			builder.append(genericTypeArguments);
+			builder.append(", ");
+		}
+		if (superClassGenericTypeArguments != null) {
+			builder.append("superClassGenericTypeArguments=");
+			builder.append(superClassGenericTypeArguments);
+		}
+		builder.append("]");
+		return builder.toString();
 	}
 
 }

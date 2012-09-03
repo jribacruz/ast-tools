@@ -68,7 +68,7 @@ public class ExtendedASTVisitor extends ASTVisitor {
 	}
 
 	protected Set<TInterface> getInterfaces(TypeDeclaration declaration) {
-		if(declaration.isInterface()) {
+		if (declaration.isInterface()) {
 
 		}
 		return null;
@@ -77,10 +77,10 @@ public class ExtendedASTVisitor extends ASTVisitor {
 	@SuppressWarnings("unchecked")
 	protected String getSuperClassName(TypeDeclaration declaration) {
 		if (declaration.getSuperclassType() != null) {
-			if(declaration.getSuperclassType().isSimpleType()) {
+			if (declaration.getSuperclassType().isSimpleType()) {
 				SimpleType simpleType = (SimpleType) declaration.getSuperclassType();
 				this.superClassName = simpleType.getName().toString();
-			} else if(declaration.getSuperclassType().isParameterizedType()) {
+			} else if (declaration.getSuperclassType().isParameterizedType()) {
 				ParameterizedType parameterizedType = (ParameterizedType) declaration.getSuperclassType();
 				this.superClassName = parameterizedType.getType().toString();
 				this.superClassGenericTypeArguments.addAll(parameterizedType.typeArguments());
@@ -128,7 +128,7 @@ public class ExtendedASTVisitor extends ASTVisitor {
 	 */
 	@SuppressWarnings("unchecked")
 	protected List<String> getReturnTypes(MethodDeclaration declaration) {
-		return declaration.getReturnType2().getClass() == ParameterizedType.class ? ((ParameterizedType) declaration
+		return declaration.getReturnType2() != null && declaration.getReturnType2().getClass() == ParameterizedType.class ? ((ParameterizedType) declaration
 				.getReturnType2()).typeArguments() : Lists.newArrayList(declaration.getReturnType2().toString());
 	}
 
@@ -157,11 +157,14 @@ public class ExtendedASTVisitor extends ASTVisitor {
 	 */
 	protected String getReturnGenericType(MethodDeclaration declaration) {
 		Type type = declaration.getReturnType2();
-		if (type.getClass() == ParameterizedType.class) {
-			ParameterizedType parameterizedType = (ParameterizedType) type;
-			if (parameterizedType.getType().getClass() == SimpleType.class) {
-				SimpleType simpleType = (SimpleType) parameterizedType.getType();
-				return simpleType.getName().toString();
+		// caso o método seja construtor nao processa
+		if (type != null) {
+			if (type.getClass() == ParameterizedType.class) {
+				ParameterizedType parameterizedType = (ParameterizedType) type;
+				if (parameterizedType.getType().getClass() == SimpleType.class) {
+					SimpleType simpleType = (SimpleType) parameterizedType.getType();
+					return simpleType.getName().toString();
+				}
 			}
 		}
 		return "";
