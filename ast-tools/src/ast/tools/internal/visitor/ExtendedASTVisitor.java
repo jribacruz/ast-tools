@@ -128,8 +128,16 @@ public class ExtendedASTVisitor extends ASTVisitor {
 	 */
 	@SuppressWarnings("unchecked")
 	protected List<String> getReturnTypes(MethodDeclaration declaration) {
-		return declaration.getReturnType2() != null && declaration.getReturnType2().getClass() == ParameterizedType.class ? ((ParameterizedType) declaration
-				.getReturnType2()).typeArguments() : Lists.newArrayList(declaration.getReturnType2().toString());
+		Type type = declaration.getReturnType2();
+		if (type != null) {
+			if (type.getClass() == ParameterizedType.class) {
+				ParameterizedType parameterizedType = (ParameterizedType) type;
+				return parameterizedType.typeArguments();
+			} else {
+				return Lists.newArrayList(declaration.getReturnType2().toString());
+			}
+		}
+		return new ArrayList<String>();
 	}
 
 	/**
