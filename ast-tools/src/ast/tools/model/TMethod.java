@@ -17,4 +17,6 @@ public interface TMethod {
 	Set<TAnnotation> getAnnotations();
 
 	Set<TModifier> getModifiers();
+
+	List<String> getThrownExceptions();
 }

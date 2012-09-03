@@ -87,6 +87,7 @@ public class ASTVisitor extends ExtendedASTVisitor {
 		return super.visit(declaration);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public boolean visit(MethodDeclaration declaration) {
 		String name = getName(declaration);
@@ -96,12 +97,14 @@ public class ASTVisitor extends ExtendedASTVisitor {
 		Set<TAnnotation> methodAnnotations = processAnnotations(declaration);
 		Set<TModifier> modifiers = getModifiers(declaration);
 		Set<TParameter> parameters = getParameters(declaration);
-
-		TMethod method = new TMethodImpl(name, parameters, methodAnnotations, modifiers, returnTypes, returnGenericType, constructor);
+		List<String> thrownExceptions = declaration.thrownExceptions();
+		TMethod method = new TMethodImpl(name, parameters, methodAnnotations, modifiers, returnTypes, returnGenericType,
+				constructor, thrownExceptions);
 
 		this.methods.add(method);
 
-		processor.notifyMethodObservers(name, returnTypes, returnGenericType, modifiers, parameters, methodAnnotations, constructor);
+		processor.notifyMethodObservers(name, returnTypes, returnGenericType, modifiers, parameters, methodAnnotations,
+				constructor, thrownExceptions);
 
 		return super.visit(declaration);
 	}

@@ -75,11 +75,11 @@ public class ASTObservable {
 	 * @param annotations
 	 */
 	public void notifyMethodObservers(String name, List<String> returnTypes, String genericReturnType,
-			Set<TModifier> modifiers, Set<TParameter> parameters, Set<TAnnotation> annotations, boolean constructor) {
+			Set<TModifier> modifiers, Set<TParameter> parameters, Set<TAnnotation> annotations, boolean constructor, List<String> thrownExceptions) {
 		Iterator<ASTMethodObserver> iterator = methodObservers.iterator();
 		while (iterator.hasNext()) {
 			ASTMethodObserver methodObserver = iterator.next();
-			methodObserver.update(name, returnTypes, genericReturnType, modifiers, parameters, annotations, constructor);
+			methodObserver.update(name, returnTypes, genericReturnType, modifiers, parameters, annotations, constructor, thrownExceptions);
 		}
 	}
 

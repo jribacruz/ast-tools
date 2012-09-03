@@ -17,9 +17,10 @@ public class TMethodImpl implements TMethod {
 	private List<String> returnTypes;
 	private String returnGenericType;
 	private boolean constructor;
+	private List<String> thrownExceptions;
 
 	public TMethodImpl(String name, Set<TParameter> parameters, Set<TAnnotation> annotations, Set<TModifier> modifiers,
-			List<String> returnTypes, String returnGenericType, boolean constructor) {
+			List<String> returnTypes, String returnGenericType, boolean constructor, List<String> thrownExceptions) {
 		super();
 		this.name = name;
 		this.parameters = parameters;
@@ -28,6 +29,7 @@ public class TMethodImpl implements TMethod {
 		this.returnTypes = returnTypes;
 		this.returnGenericType = returnGenericType;
 		this.constructor = constructor;
+		this.thrownExceptions = thrownExceptions;
 	}
 
 	@Override
@@ -63,6 +65,11 @@ public class TMethodImpl implements TMethod {
 	@Override
 	public boolean isConstructor() {
 		return this.constructor;
+	}
+
+	@Override
+	public List<String> getThrownExceptions() {
+		return this.thrownExceptions;
 	}
 
 	@Override
@@ -135,6 +142,14 @@ public class TMethodImpl implements TMethod {
 		if (returnGenericType != null) {
 			builder.append("returnGenericType=");
 			builder.append(returnGenericType);
+			builder.append(", ");
+		}
+		builder.append("constructor=");
+		builder.append(constructor);
+		builder.append(", ");
+		if (thrownExceptions != null) {
+			builder.append("thrownExceptions=");
+			builder.append(thrownExceptions);
 		}
 		builder.append("]");
 		return builder.toString();

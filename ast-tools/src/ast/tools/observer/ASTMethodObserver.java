@@ -9,5 +9,5 @@ import ast.tools.model.TParameter;
 
 public interface ASTMethodObserver {
 	void update(String name, List<String> returnTypes, String genericReturnType, Set<TModifier> modifiers,
-			Set<TParameter> parameters, Set<TAnnotation> annotations, boolean constructor);
+			Set<TParameter> parameters, Set<TAnnotation> annotations, boolean constructor, List<String> thrownExceptions);
 }
