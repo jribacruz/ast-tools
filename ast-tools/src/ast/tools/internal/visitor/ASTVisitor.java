@@ -101,7 +101,7 @@ public class ASTVisitor extends ExtendedASTVisitor {
 
 		this.methods.add(method);
 
-		processor.notifyMethodObservers(name, returnTypes, returnGenericType, modifiers, parameters, methodAnnotations);
+		processor.notifyMethodObservers(name, returnTypes, returnGenericType, modifiers, parameters, methodAnnotations, constructor);
 
 		return super.visit(declaration);
 	}
