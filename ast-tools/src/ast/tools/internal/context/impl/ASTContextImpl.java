@@ -7,7 +7,6 @@ import ast.tools.context.ASTContext;
 import ast.tools.model.TAnnotation;
 import ast.tools.model.TAttribute;
 import ast.tools.model.TImport;
-import ast.tools.model.TInterface;
 import ast.tools.model.TMethod;
 
 public class ASTContextImpl implements ASTContext {
@@ -18,7 +17,7 @@ public class ASTContextImpl implements ASTContext {
 	private Set<TAttribute> attributes;
 	private Set<TMethod> methods;
 	private Set<TImport> imports;
-	private Set<TInterface> interfaces;
+	private Set<String> interfaces;
 	private String packageName;
 	private String superClassName;
 	private List<String> genericTypeArguments;
@@ -29,7 +28,7 @@ public class ASTContextImpl implements ASTContext {
 	}
 
 	public ASTContextImpl(boolean isInterface, String className, Set<TAnnotation> annotations, Set<TAttribute> attributes,
-			Set<TMethod> methods, Set<TImport> imports, Set<TInterface> interfaces, String packageName,
+			Set<TMethod> methods, Set<TImport> imports, Set<String> interfaces, String packageName,
 			String superClassName, List<String> genericTypeArguments, List<String> superClassGenericTypeArguments) {
 		super();
 		this.isInterface = isInterface;
@@ -76,7 +75,7 @@ public class ASTContextImpl implements ASTContext {
 	}
 
 	@Override
-	public Set<TInterface> getInterfaces() {
+	public Set<String> getInterfaces() {
 		return this.interfaces;
 	}
 

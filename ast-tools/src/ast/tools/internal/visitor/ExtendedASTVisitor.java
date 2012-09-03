@@ -21,6 +21,7 @@ import org.eclipse.jdt.core.dom.Type;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 
+import ast.tools.internal.model.impl.TClassImpl;
 import ast.tools.internal.model.impl.TParameterImpl;
 import ast.tools.internal.predicate.MarkerAnnotationPredicate;
 import ast.tools.internal.predicate.NormalAnnotationPredicate;
@@ -32,7 +33,6 @@ import ast.tools.model.TAnnotation;
 import ast.tools.model.TAttribute;
 import ast.tools.model.TClass;
 import ast.tools.model.TImport;
-import ast.tools.model.TInterface;
 import ast.tools.model.TMethod;
 import ast.tools.model.TModifier;
 import ast.tools.model.TParameter;
@@ -51,7 +51,7 @@ public class ExtendedASTVisitor extends ASTVisitor {
 	protected Set<TAttribute> attributes;
 	protected Set<TMethod> methods;
 	protected Set<TImport> imports;
-	protected Set<TInterface> interfaces;
+	protected Set<String> interfaces;
 	protected List<String> genericTypeArguments;
 	protected List<String> superClassGenericTypeArguments;
 
@@ -61,17 +61,22 @@ public class ExtendedASTVisitor extends ASTVisitor {
 		this.attributes = new HashSet<TAttribute>();
 		this.methods = new HashSet<TMethod>();
 		this.imports = new HashSet<TImport>();
-		this.interfaces = new HashSet<TInterface>();
+		this.interfaces = new HashSet<String>();
 		this.genericTypeArguments = new ArrayList<String>();
 		this.superClassGenericTypeArguments = new ArrayList<String>();
 
 	}
 
-	protected Set<TInterface> getInterfaces(TypeDeclaration declaration) {
+	protected Set<String> getInterfaces(TypeDeclaration declaration) {
 		if (declaration.isInterface()) {
 
 		}
 		return null;
+	}
+
+	public TClass getTClass() {
+		return new TClassImpl(className, packageName, imports, annotations, interfaces, attributes, methods, genericTypeArguments,
+				superClassName, superClassGenericTypeArguments);
 	}
 
 	@SuppressWarnings("unchecked")

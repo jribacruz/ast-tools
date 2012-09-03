@@ -6,7 +6,6 @@ import java.util.Set;
 import ast.tools.model.TAnnotation;
 import ast.tools.model.TAttribute;
 import ast.tools.model.TImport;
-import ast.tools.model.TInterface;
 import ast.tools.model.TMethod;
 
 public interface ASTContext {
@@ -22,7 +21,7 @@ public interface ASTContext {
 
 	List<String> getSuperClassGenericTypeArguments();
 
-	Set<TInterface> getInterfaces();
+	Set<String> getInterfaces();
 
 	Set<TAnnotation> getAnnotations();
 
