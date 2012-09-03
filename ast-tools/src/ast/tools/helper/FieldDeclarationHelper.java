@@ -4,6 +4,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 import org.eclipse.jdt.core.dom.AST;
+import org.eclipse.jdt.core.dom.Expression;
 import org.eclipse.jdt.core.dom.FieldDeclaration;
 import org.eclipse.jdt.core.dom.ParameterizedType;
 import org.eclipse.jdt.core.dom.PrimitiveType;
@@ -16,6 +17,7 @@ public class FieldDeclarationHelper {
 	private FieldDeclaration declaration;
 	private String name;
 	private Set<TModifier> modifiers;
+	private VariableDeclarationFragment fragment;
 
 	public FieldDeclarationHelper(AST ast, String name, Set<TModifier> modifiers) {
 		super();
@@ -26,10 +28,14 @@ public class FieldDeclarationHelper {
 	}
 
 	private void init() {
-		VariableDeclarationFragment fragment = ast.newVariableDeclarationFragment();
-		fragment.setName(ast.newSimpleName(this.name));
+		this.fragment = ast.newVariableDeclarationFragment();
+		this.fragment.setName(ast.newSimpleName(this.name));
 		this.declaration = ast.newFieldDeclaration(fragment);
 		setModifiers();
+	}
+
+	public void setInitializer(Expression expression) {
+		this.fragment.setInitializer(expression);
 	}
 
 	public void setType(PrimitiveType.Code type) {
