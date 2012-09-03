@@ -1,6 +1,7 @@
 package ast.tools.helper;
 
 import org.eclipse.jdt.core.dom.CompilationUnit;
+import org.eclipse.jdt.core.dom.FieldDeclaration;
 import org.eclipse.jdt.core.dom.ImportDeclaration;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
@@ -21,6 +22,11 @@ public class CompilationUnitHelper {
 	@SuppressWarnings("unchecked")
 	public void addImport(ImportDeclaration importDeclaration) {
 		this.unit.imports().add(importDeclaration);
+	}
+
+	@SuppressWarnings("unchecked")
+	public void addFieldDeclaration(FieldDeclaration fieldDeclaration) {
+		getTypeDeclaration().bodyDeclarations().add(fieldDeclaration);
 	}
 
 	private TypeDeclaration getTypeDeclaration() {

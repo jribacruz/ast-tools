@@ -5,6 +5,8 @@ import java.util.Set;
 
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.FieldDeclaration;
+import org.eclipse.jdt.core.dom.ParameterizedType;
+import org.eclipse.jdt.core.dom.PrimitiveType;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 
 import ast.tools.model.TModifier;
@@ -30,15 +32,34 @@ public class FieldDeclarationHelper {
 		setModifiers();
 	}
 
+	public void setType(PrimitiveType.Code type) {
+		this.declaration.setType(ast.newPrimitiveType(type));
+	}
+
+	public void setReturnType(String type) {
+		this.declaration.setType(ast.newSimpleType(ast.newSimpleName(type)));
+	}
+
+	@SuppressWarnings("unchecked")
+	public void setType(String genericType, String... types) {
+		ParameterizedType parameterizedType = ast.newParameterizedType(ast.newSimpleType(ast.newSimpleName(genericType)));
+		for (String type : types) {
+			parameterizedType.typeArguments().add(ast.newSimpleType(ast.newSimpleName(type)));
+		}
+		this.declaration.setType(parameterizedType);
+	}
+
 	@SuppressWarnings("unchecked")
 	private void setModifiers() {
 		Iterator<TModifier> iterator = this.modifiers.iterator();
-		while(iterator.hasNext()) {
+		while (iterator.hasNext()) {
 			TModifier modifier = iterator.next();
-			this.declaration.modifiers().add(modifier.getModifierType());
+			this.declaration.modifiers().addAll(ast.newModifiers(modifier.getModifierType()));
 		}
 	}
 
-
+	public FieldDeclaration getFieldDeclaration() {
+		return declaration;
+	}
 
 }
