@@ -23,12 +23,15 @@ import ast.tools.context.ASTContext;
 import ast.tools.context.ASTWriter;
 import ast.tools.helper.CompilationUnitHelper;
 import ast.tools.internal.context.impl.ASTContextImpl;
+import ast.tools.internal.model.impl.TClassImpl;
 import ast.tools.internal.visitor.ASTVisitor;
+import ast.tools.model.TClass;
 import ast.tools.observable.ASTObservable;
 
 public class ASTProcessor extends ASTObservable {
 	private ICompilationUnit iunit;
 	private CompilationUnit unit;
+	private TClass tClass;
 
 	public ASTProcessor(ICompilationUnit iunit) {
 		super();
@@ -72,8 +75,13 @@ public class ASTProcessor extends ASTObservable {
 			ASTVisitor visitor = new ASTVisitor(this);
 			unit.accept(visitor);
 			context = visitor.getContext();
+			tClass = visitor.getTClass();
 		}
 		return context;
+	}
+
+	public TClass getTClass() {
+		return this.tClass != null ? this.tClass : new TClassImpl();
 	}
 
 	public void write(ASTWriter writer) {
