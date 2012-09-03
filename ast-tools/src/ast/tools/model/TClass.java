@@ -11,9 +11,11 @@ public interface TClass {
 
 	List<String> getGenericTypeArguments();
 
-	TClass getSuperClass();
+	String getSuperClassName();
 
-	Set<TInterface> getInterfaces();
+	List<String> getSuperClassGenericTypeArguments();
+
+	Set<String> getInterfaces();
 
 	Set<TAnnotation> getAnnotations();
 

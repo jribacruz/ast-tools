@@ -7,34 +7,39 @@ import ast.tools.model.TAnnotation;
 import ast.tools.model.TAttribute;
 import ast.tools.model.TClass;
 import ast.tools.model.TImport;
-import ast.tools.model.TInterface;
 import ast.tools.model.TMethod;
 
 public class TClassImpl implements TClass {
 
 	private String name;
 	private String packageName;
-	private TClass superClass;
-	private Set<TInterface> interfaces;
+	private Set<TImport> imports;
 	private Set<TAnnotation> annotations;
+	private Set<String> interfaces;
 	private Set<TAttribute> attributes;
 	private Set<TMethod> methods;
-	private Set<TImport> imports;
 	private List<String> genericTypeArguments;
+	private String superClassName;
+	private List<String> superClassGenericTypeArguments;
 
-	public TClassImpl(String name, String packageName, TClass superClass, Set<TInterface> interfaces,
-			Set<TAnnotation> annotations, Set<TAttribute> attributes, Set<TMethod> methods, Set<TImport> imports,
-			List<String> genericTypeArguments) {
+	public TClassImpl() {
+		super();
+	}
+
+	public TClassImpl(String name, String packageName, Set<TImport> imports, Set<TAnnotation> annotations,
+			Set<String> interfaces, Set<TAttribute> attributes, Set<TMethod> methods, List<String> genericTypeArguments,
+			String superClassName, List<String> superClassGenericTypeArguments) {
 		super();
 		this.name = name;
 		this.packageName = packageName;
-		this.superClass = superClass;
-		this.interfaces = interfaces;
+		this.imports = imports;
 		this.annotations = annotations;
+		this.interfaces = interfaces;
 		this.attributes = attributes;
 		this.methods = methods;
-		this.imports = imports;
 		this.genericTypeArguments = genericTypeArguments;
+		this.superClassName = superClassName;
+		this.superClassGenericTypeArguments = superClassGenericTypeArguments;
 	}
 
 	@Override
@@ -48,12 +53,7 @@ public class TClassImpl implements TClass {
 	}
 
 	@Override
-	public TClass getSuperClass() {
-		return this.superClass;
-	}
-
-	@Override
-	public Set<TInterface> getInterfaces() {
+	public Set<String> getInterfaces() {
 		return this.interfaces;
 	}
 
@@ -83,6 +83,16 @@ public class TClassImpl implements TClass {
 	}
 
 	@Override
+	public String getSuperClassName() {
+		return this.superClassName;
+	}
+
+	@Override
+	public List<String> getSuperClassGenericTypeArguments() {
+		return this.superClassGenericTypeArguments;
+	}
+
+	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("TClassImpl [");
@@ -94,11 +104,6 @@ public class TClassImpl implements TClass {
 		if (packageName != null) {
 			builder.append("packageName=");
 			builder.append(packageName);
-			builder.append(", ");
-		}
-		if (superClass != null) {
-			builder.append("superClass=");
-			builder.append(superClass);
 			builder.append(", ");
 		}
 		if (interfaces != null) {
@@ -129,6 +134,16 @@ public class TClassImpl implements TClass {
 		if (genericTypeArguments != null) {
 			builder.append("genericTypeArguments=");
 			builder.append(genericTypeArguments);
+			builder.append(", ");
+		}
+		if (superClassName != null) {
+			builder.append("superClassName=");
+			builder.append(superClassName);
+			builder.append(", ");
+		}
+		if (superClassGenericTypeArguments != null) {
+			builder.append("superClassGeneritTypeArguments=");
+			builder.append(superClassGenericTypeArguments);
 		}
 		builder.append("]");
 		return builder.toString();
