@@ -14,6 +14,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import plugin.commons.logger.Log;
 import plugin.commons.util.ProjectUtils;
 import ast.tools.core.ASTProcessor;
+import ast.tools.generator.internal.function.FieldFunction;
 import ast.tools.generator.internal.function.ImportFunction;
 import ast.tools.generator.model.CompilationUnit;
 import ast.tools.generator.model.Generator;
@@ -57,6 +58,7 @@ public class GeneratorProcessor {
 					log.info("Atualizando unidade de compilação: " + compilationUnit.getElementName());
 					ASTProcessor processor = new ASTProcessor(compilationUnit);
 					GeneratorUtils.forAllDo(unitModel.getImports(), processor, new ImportFunction());
+					GeneratorUtils.forAllDo(unitModel.getFields(), processor, new FieldFunction());
 					processor.commit();
 					log.info("Unidade de compilação atualizada com sucesso: " + compilationUnit.getElementName());
 
