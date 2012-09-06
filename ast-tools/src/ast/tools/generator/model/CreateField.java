@@ -12,6 +12,8 @@ import javax.xml.bind.annotation.XmlType;
 
 import org.apache.commons.lang.StringUtils;
 
+import ast.tools.generator.context.GeneratorContext;
+
 @XmlType
 @XmlAccessorType(XmlAccessType.FIELD)
 public class CreateField {
@@ -38,7 +40,7 @@ public class CreateField {
 	}
 
 	public String getName() {
-		return name;
+		return GeneratorContext.replaceTokens(name);
 	}
 
 	public void setName(String name) {

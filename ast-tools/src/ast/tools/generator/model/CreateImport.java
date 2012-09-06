@@ -7,6 +7,8 @@ import javax.xml.bind.annotation.XmlType;
 
 import org.apache.commons.lang.StringUtils;
 
+import ast.tools.generator.context.GeneratorContext;
+
 @XmlType
 @XmlAccessorType(XmlAccessType.FIELD)
 public class CreateImport {
@@ -15,7 +17,7 @@ public class CreateImport {
 	private String name;
 
 	public String[] getNames() {
-		return StringUtils.split(name, ".");
+		return StringUtils.split(GeneratorContext.replaceTokens(name), ".");
 	}
 
 	public void setName(String name) {

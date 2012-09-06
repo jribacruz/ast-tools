@@ -7,6 +7,8 @@ import javax.xml.bind.annotation.XmlType;
 
 import org.apache.commons.lang.StringUtils;
 
+import ast.tools.generator.context.GeneratorContext;
+
 @XmlType
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Parameter {
@@ -25,7 +27,7 @@ public class Parameter {
 	}
 
 	public String getName() {
-		return name;
+		return GeneratorContext.replaceTokens(name);
 	}
 
 	public void setName(String name) {
@@ -46,6 +48,28 @@ public class Parameter {
 
 	public void setTypes(String types) {
 		this.types = types;
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("Parameter [");
+		if (name != null) {
+			builder.append("name=");
+			builder.append(name);
+			builder.append(", ");
+		}
+		if (genericType != null) {
+			builder.append("genericType=");
+			builder.append(genericType);
+			builder.append(", ");
+		}
+		if (types != null) {
+			builder.append("types=");
+			builder.append(types);
+		}
+		builder.append("]");
+		return builder.toString();
 	}
 
 }

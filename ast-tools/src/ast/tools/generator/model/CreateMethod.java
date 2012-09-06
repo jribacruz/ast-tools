@@ -12,6 +12,8 @@ import javax.xml.bind.annotation.XmlType;
 
 import org.apache.commons.lang.StringUtils;
 
+import ast.tools.generator.context.GeneratorContext;
+
 @XmlType
 @XmlAccessorType(XmlAccessType.FIELD)
 public class CreateMethod {
@@ -21,12 +23,6 @@ public class CreateMethod {
 
 	@XmlAttribute
 	private String returnGenericType;
-
-	@XmlAttribute(required = true)
-	private String target;
-
-	@XmlAttribute(name = "package", required = true)
-	private String packageName;
 
 	@XmlAttribute
 	private String returnTypes;
@@ -49,7 +45,7 @@ public class CreateMethod {
 	}
 
 	public String getName() {
-		return name;
+		return GeneratorContext.replaceTokens(name);
 	}
 
 	public void setName(String name) {
@@ -96,20 +92,41 @@ public class CreateMethod {
 		this.modifiers = modifiers;
 	}
 
-	public String getTarget() {
-		return target;
-	}
-
-	public void setTarget(String target) {
-		this.target = target;
-	}
-
-	public String getPackageName() {
-		return packageName;
-	}
-
-	public void setPackageName(String packageName) {
-		this.packageName = packageName;
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("CreateMethod [");
+		if (name != null) {
+			builder.append("name=");
+			builder.append(name);
+			builder.append(", ");
+		}
+		if (returnGenericType != null) {
+			builder.append("returnGenericType=");
+			builder.append(returnGenericType);
+			builder.append(", ");
+		}
+		if (returnTypes != null) {
+			builder.append("returnTypes=");
+			builder.append(returnTypes);
+			builder.append(", ");
+		}
+		if (modifiers != null) {
+			builder.append("modifiers=");
+			builder.append(modifiers);
+			builder.append(", ");
+		}
+		if (parameters != null) {
+			builder.append("parameters=");
+			builder.append(parameters);
+			builder.append(", ");
+		}
+		if (annotations != null) {
+			builder.append("annotations=");
+			builder.append(annotations);
+		}
+		builder.append("]");
+		return builder.toString();
 	}
 
 }

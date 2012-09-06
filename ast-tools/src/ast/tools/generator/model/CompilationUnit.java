@@ -9,6 +9,8 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlType;
 
+import ast.tools.generator.context.GeneratorContext;
+
 @XmlType
 @XmlAccessorType(XmlAccessType.FIELD)
 public class CompilationUnit {
@@ -36,7 +38,7 @@ public class CompilationUnit {
 	}
 
 	public String getName() {
-		return name;
+		return GeneratorContext.replaceTokens(name);
 	}
 
 	public void setName(String name) {
@@ -44,7 +46,7 @@ public class CompilationUnit {
 	}
 
 	public String getPackageName() {
-		return packageName;
+		return GeneratorContext.replaceTokens(packageName);
 	}
 
 	public void setPackageName(String packageName) {
@@ -73,6 +75,38 @@ public class CompilationUnit {
 
 	public void setMethods(List<CreateMethod> methods) {
 		this.methods = methods;
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("CompilationUnit [");
+		if (name != null) {
+			builder.append("name=");
+			builder.append(name);
+			builder.append(", ");
+		}
+		if (packageName != null) {
+			builder.append("packageName=");
+			builder.append(packageName);
+			builder.append(", ");
+		}
+		if (imports != null) {
+			builder.append("imports=");
+			builder.append(imports);
+			builder.append(", ");
+		}
+		if (fields != null) {
+			builder.append("fields=");
+			builder.append(fields);
+			builder.append(", ");
+		}
+		if (methods != null) {
+			builder.append("methods=");
+			builder.append(methods);
+		}
+		builder.append("]");
+		return builder.toString();
 	}
 
 }

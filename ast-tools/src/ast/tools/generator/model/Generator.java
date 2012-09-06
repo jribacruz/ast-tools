@@ -28,4 +28,16 @@ public class Generator {
 		this.compilationUnits = compilationUnits;
 	}
 
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("Generator [");
+		if (compilationUnits != null) {
+			builder.append("compilationUnits=");
+			builder.append(compilationUnits);
+		}
+		builder.append("]");
+		return builder.toString();
+	}
+
 }
