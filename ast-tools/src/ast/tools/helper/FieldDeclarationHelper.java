@@ -42,7 +42,7 @@ public class FieldDeclarationHelper {
 		this.declaration.setType(ast.newPrimitiveType(type));
 	}
 
-	public void setReturnType(String type) {
+	public void setType(String type) {
 		this.declaration.setType(ast.newSimpleType(ast.newSimpleName(type)));
 	}
 
