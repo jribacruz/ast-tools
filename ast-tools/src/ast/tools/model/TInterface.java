@@ -12,7 +12,7 @@ public interface TInterface {
 
 	TInterface getSuperInterface();
 
-	Set<TAttribute> getAttributes();
+	Set<TField> getFields();
 
 	Set<TMethod> getMethods();
 }

@@ -7,8 +7,8 @@ import java.util.Set;
 import ast.tools.internal.model.impl.TAnnotationImpl;
 import ast.tools.internal.model.impl.TImportImpl;
 import ast.tools.model.TAnnotation;
-import ast.tools.model.TAttribute;
 import ast.tools.model.TClass;
+import ast.tools.model.TField;
 import ast.tools.model.TImport;
 import ast.tools.model.TMethod;
 
@@ -16,8 +16,8 @@ import com.google.common.base.Predicate;
 
 public class TUtils {
 
-	public static TAttribute findAttribute(TClass tClass, Predicate<TAttribute> predicate) {
-		for (TAttribute attribute : tClass.getAttributes()) {
+	public static TField findAttribute(TClass tClass, Predicate<TField> predicate) {
+		for (TField attribute : tClass.getFields()) {
 			if (predicate.apply(attribute)) {
 				return attribute;
 			}
@@ -25,13 +25,13 @@ public class TUtils {
 		return null;
 	}
 
-	public static Set<TAttribute> filterAttributes(TClass tClass, Predicate<TAttribute> predicate) {
-		Set<TAttribute> attributeSet = new HashSet<TAttribute>();
+	public static Set<TField> filterAttributes(TClass tClass, Predicate<TField> predicate) {
+		Set<TField> attributeSet = new HashSet<TField>();
 		if (tClass != null) {
-			Set<TAttribute> attributes = tClass.getAttributes();
-			Iterator<TAttribute> iterator = attributes.iterator();
+			Set<TField> attributes = tClass.getFields();
+			Iterator<TField> iterator = attributes.iterator();
 			while (iterator.hasNext()) {
-				TAttribute attribute = iterator.next();
+				TField attribute = iterator.next();
 				if (predicate.apply(attribute)) {
 					attributeSet.add(attribute);
 				}
