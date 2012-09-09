@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Set;
 
 import ast.tools.model.TAnnotation;
-import ast.tools.model.TAttribute;
+import ast.tools.model.TField;
 import ast.tools.model.TImport;
 import ast.tools.model.TMethod;
 
@@ -25,7 +25,7 @@ public interface ASTContext {
 
 	Set<TAnnotation> getAnnotations();
 
-	Set<TAttribute> getAttributes();
+	Set<TField> getFields();
 
 	Set<TMethod> getMethods();
 

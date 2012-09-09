@@ -5,7 +5,7 @@ import java.util.Set;
 
 import ast.tools.context.ASTContext;
 import ast.tools.model.TAnnotation;
-import ast.tools.model.TAttribute;
+import ast.tools.model.TField;
 import ast.tools.model.TImport;
 import ast.tools.model.TMethod;
 
@@ -14,7 +14,7 @@ public class ASTContextImpl implements ASTContext {
 	private boolean isInterface;
 	private String className;
 	private Set<TAnnotation> annotations;
-	private Set<TAttribute> attributes;
+	private Set<TField> fields;
 	private Set<TMethod> methods;
 	private Set<TImport> imports;
 	private Set<String> interfaces;
@@ -27,14 +27,14 @@ public class ASTContextImpl implements ASTContext {
 		super();
 	}
 
-	public ASTContextImpl(boolean isInterface, String className, Set<TAnnotation> annotations, Set<TAttribute> attributes,
+	public ASTContextImpl(boolean isInterface, String className, Set<TAnnotation> annotations, Set<TField> attributes,
 			Set<TMethod> methods, Set<TImport> imports, Set<String> interfaces, String packageName,
 			String superClassName, List<String> genericTypeArguments, List<String> superClassGenericTypeArguments) {
 		super();
 		this.isInterface = isInterface;
 		this.className = className;
 		this.annotations = annotations;
-		this.attributes = attributes;
+		this.fields = attributes;
 		this.methods = methods;
 		this.imports = imports;
 		this.interfaces = interfaces;
@@ -60,8 +60,8 @@ public class ASTContextImpl implements ASTContext {
 	}
 
 	@Override
-	public Set<TAttribute> getAttributes() {
-		return this.attributes;
+	public Set<TField> getFields() {
+		return this.fields;
 	}
 
 	@Override
@@ -115,9 +115,9 @@ public class ASTContextImpl implements ASTContext {
 			builder.append(annotations);
 			builder.append(", ");
 		}
-		if (attributes != null) {
+		if (fields != null) {
 			builder.append("attributes=");
-			builder.append(attributes);
+			builder.append(fields);
 			builder.append(", ");
 		}
 		if (methods != null) {
