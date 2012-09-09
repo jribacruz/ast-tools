@@ -4,10 +4,10 @@ import java.util.List;
 import java.util.Set;
 
 import ast.tools.model.TAnnotation;
-import ast.tools.model.TAttribute;
+import ast.tools.model.TField;
 import ast.tools.model.TModifier;
 
-public class TAttributeImpl implements TAttribute {
+public class TFieldImpl implements TField {
 
 	private String name;
 	private List<String> types;
@@ -15,7 +15,7 @@ public class TAttributeImpl implements TAttribute {
 	private Set<TAnnotation> annotations;
 	private Set<TModifier> modifiers;
 
-	public TAttributeImpl(String name, List<String> types, String genericType, Set<TAnnotation> annotations,
+	public TFieldImpl(String name, List<String> types, String genericType, Set<TAnnotation> annotations,
 			Set<TModifier> modifiers) {
 		super();
 		this.name = name;
@@ -69,7 +69,7 @@ public class TAttributeImpl implements TAttribute {
 		if (getClass() != obj.getClass()) {
 			return false;
 		}
-		TAttributeImpl other = (TAttributeImpl) obj;
+		TFieldImpl other = (TFieldImpl) obj;
 		if (name == null) {
 			if (other.name != null) {
 				return false;

@@ -3,7 +3,7 @@ package ast.tools.model;
 import java.util.List;
 import java.util.Set;
 
-public interface TAttribute {
+public interface TField {
 	String getName();
 
 	List<String> getTypes();
