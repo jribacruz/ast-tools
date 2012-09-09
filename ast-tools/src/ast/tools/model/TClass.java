@@ -19,7 +19,7 @@ public interface TClass {
 
 	Set<TAnnotation> getAnnotations();
 
-	Set<TAttribute> getAttributes();
+	Set<TField> getFields();
 
 	Set<TMethod> getMethods();
 

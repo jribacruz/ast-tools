@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.Set;
 
 import ast.tools.model.TAnnotation;
-import ast.tools.model.TAttribute;
 import ast.tools.model.TClass;
+import ast.tools.model.TField;
 import ast.tools.model.TImport;
 import ast.tools.model.TMethod;
 
@@ -16,7 +16,7 @@ public class TClassImpl implements TClass {
 	private Set<TImport> imports;
 	private Set<TAnnotation> annotations;
 	private Set<String> interfaces;
-	private Set<TAttribute> attributes;
+	private Set<TField> fields;
 	private Set<TMethod> methods;
 	private List<String> genericTypeArguments;
 	private String superClassName;
@@ -27,7 +27,7 @@ public class TClassImpl implements TClass {
 	}
 
 	public TClassImpl(String name, String packageName, Set<TImport> imports, Set<TAnnotation> annotations,
-			Set<String> interfaces, Set<TAttribute> attributes, Set<TMethod> methods, List<String> genericTypeArguments,
+			Set<String> interfaces, Set<TField> attributes, Set<TMethod> methods, List<String> genericTypeArguments,
 			String superClassName, List<String> superClassGenericTypeArguments) {
 		super();
 		this.name = name;
@@ -35,7 +35,7 @@ public class TClassImpl implements TClass {
 		this.imports = imports;
 		this.annotations = annotations;
 		this.interfaces = interfaces;
-		this.attributes = attributes;
+		this.fields = attributes;
 		this.methods = methods;
 		this.genericTypeArguments = genericTypeArguments;
 		this.superClassName = superClassName;
@@ -63,8 +63,8 @@ public class TClassImpl implements TClass {
 	}
 
 	@Override
-	public Set<TAttribute> getAttributes() {
-		return this.attributes;
+	public Set<TField> getFields() {
+		return this.fields;
 	}
 
 	@Override
@@ -116,9 +116,9 @@ public class TClassImpl implements TClass {
 			builder.append(annotations);
 			builder.append(", ");
 		}
-		if (attributes != null) {
-			builder.append("attributes=");
-			builder.append(attributes);
+		if (fields != null) {
+			builder.append("fields=");
+			builder.append(fields);
 			builder.append(", ");
 		}
 		if (methods != null) {
