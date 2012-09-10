@@ -37,6 +37,9 @@ public class UpdateClass {
 
 	public UpdateClass() {
 		super();
+		this.imports = new ArrayList<CreateImport>();
+		this.fields = new ArrayList<CreateField>();
+		this.methods = new ArrayList<CreateMethod>();
 	}
 
 	public String getName() {
