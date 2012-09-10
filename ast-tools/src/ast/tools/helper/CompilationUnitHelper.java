@@ -25,7 +25,7 @@ public class CompilationUnitHelper {
 	}
 
 	@SuppressWarnings("unchecked")
-	public void addFieldDeclaration(FieldDeclaration fieldDeclaration) {
+	public void addField(FieldDeclaration fieldDeclaration) {
 		getTypeDeclaration().bodyDeclarations().add(fieldDeclaration);
 	}
 

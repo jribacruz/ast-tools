@@ -3,6 +3,7 @@ package ast.tools.helper;
 import java.util.Iterator;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.Expression;
 import org.eclipse.jdt.core.dom.FieldDeclaration;
@@ -11,6 +12,7 @@ import org.eclipse.jdt.core.dom.PrimitiveType;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 
 import ast.tools.model.TModifier;
+import ast.tools.util.TUtils;
 
 public class FieldDeclarationHelper {
 	private AST ast;
@@ -38,21 +40,32 @@ public class FieldDeclarationHelper {
 		this.fragment.setInitializer(expression);
 	}
 
-	public void setType(PrimitiveType.Code type) {
+	private void setType(PrimitiveType.Code type) {
 		this.declaration.setType(ast.newPrimitiveType(type));
 	}
 
-	public void setType(String type) {
-		this.declaration.setType(ast.newSimpleType(ast.newSimpleName(type)));
+	private void setType(String type) {
+		if (TUtils.isPrimitiveType(type)) {
+			this.setType(TUtils.stringToPrimitiveCode(type));
+		} else {
+			this.declaration.setType(ast.newSimpleType(ast.newSimpleName(type)));
+		}
 	}
 
 	@SuppressWarnings("unchecked")
 	public void setType(String genericType, String... types) {
-		ParameterizedType parameterizedType = ast.newParameterizedType(ast.newSimpleType(ast.newSimpleName(genericType)));
-		for (String type : types) {
-			parameterizedType.typeArguments().add(ast.newSimpleType(ast.newSimpleName(type)));
+		if (!StringUtils.isEmpty(genericType)) {
+			ParameterizedType parameterizedType = ast
+					.newParameterizedType(ast.newSimpleType(ast.newSimpleName(genericType)));
+			for (String type : types) {
+				parameterizedType.typeArguments().add(ast.newSimpleType(ast.newSimpleName(type)));
+			}
+			this.declaration.setType(parameterizedType);
+		} else {
+			if (types != null && types.length == 1) {
+				this.setType(types[0]);
+			}
 		}
-		this.declaration.setType(parameterizedType);
 	}
 
 	@SuppressWarnings("unchecked")

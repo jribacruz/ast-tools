@@ -3,14 +3,18 @@ package ast.tools.helper;
 import java.util.Iterator;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.Block;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
+import org.eclipse.jdt.core.dom.NullLiteral;
 import org.eclipse.jdt.core.dom.ParameterizedType;
 import org.eclipse.jdt.core.dom.PrimitiveType;
+import org.eclipse.jdt.core.dom.ReturnStatement;
 import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
 
 import ast.tools.model.TModifier;
+import ast.tools.util.TUtils;
 
 public class MethodDeclarationHelper {
 	private String name;
@@ -30,10 +34,10 @@ public class MethodDeclarationHelper {
 		this.init();
 	}
 
-	public MethodDeclarationHelper(AST ast, String name, Set<TModifier> modifier) {
+	public MethodDeclarationHelper(AST ast, String name, Set<TModifier> modifiers) {
 		super();
 		this.name = name;
-		this.modifiers = modifier;
+		this.modifiers = modifiers;
 		this.constructor = false;
 		this.ast = ast;
 		this.declaration = ast.newMethodDeclaration();
@@ -49,14 +53,21 @@ public class MethodDeclarationHelper {
 	}
 
 	@SuppressWarnings("unchecked")
+	public void setNullReturn() {
+		ReturnStatement returnStatement = ast.newReturnStatement();
+		NullLiteral nullLiteral = ast.newNullLiteral();
+		returnStatement.setExpression(nullLiteral);
+		this.body.statements().add(returnStatement);
+	}
+
+	@SuppressWarnings("unchecked")
 	private void setModifiers() {
 		Iterator<TModifier> iterator = this.modifiers.iterator();
-		while(iterator.hasNext()) {
+		while (iterator.hasNext()) {
 			TModifier modifier = iterator.next();
 			this.declaration.modifiers().addAll(ast.newModifiers(modifier.getModifierType()));
 		}
 	}
-
 
 	public MethodDeclaration getMethodDeclaration() {
 		return this.declaration;
@@ -66,25 +77,37 @@ public class MethodDeclarationHelper {
 		return this.declaration.getBody();
 	}
 
-	public void setReturnType(PrimitiveType.Code type) {
+	private void setReturnType(PrimitiveType.Code type) {
 		this.declaration.setReturnType2(ast.newPrimitiveType(type));
 	}
 
-	public void setReturnType(String type) {
-		this.declaration.setReturnType2(ast.newSimpleType(ast.newSimpleName(type)));
+	private void setReturnType(String type) {
+		if (TUtils.isPrimitiveType(type)) {
+			this.setReturnType(TUtils.stringToPrimitiveCode(type));
+		} else {
+			this.declaration.setReturnType2(ast.newSimpleType(ast.newSimpleName(type)));
+		}
 	}
 
 	@SuppressWarnings("unchecked")
 	public void setReturnType(String genericType, String... types) {
-		ParameterizedType parameterizedType = ast.newParameterizedType(ast.newSimpleType(ast.newSimpleName(genericType)));
-		for (String type : types) {
-			parameterizedType.typeArguments().add(ast.newSimpleType(ast.newSimpleName(type)));
+		if (!StringUtils.isEmpty(genericType)) {
+
+			ParameterizedType parameterizedType = ast
+					.newParameterizedType(ast.newSimpleType(ast.newSimpleName(genericType)));
+			for (String type : types) {
+				parameterizedType.typeArguments().add(ast.newSimpleType(ast.newSimpleName(type)));
+			}
+			this.declaration.setReturnType2(parameterizedType);
+		} else {
+			if (types != null && types.length == 1) {
+				this.setReturnType(types[0]);
+			}
 		}
-		this.declaration.setReturnType2(parameterizedType);
 	}
 
 	@SuppressWarnings("unchecked")
-	public void addParameter(String name, PrimitiveType.Code type) {
+	private void addParameter(String name, PrimitiveType.Code type) {
 		SingleVariableDeclaration singleVariableDeclaration = ast.newSingleVariableDeclaration();
 		singleVariableDeclaration.setName(ast.newSimpleName(name));
 		singleVariableDeclaration.setType(ast.newPrimitiveType(type));
@@ -92,25 +115,38 @@ public class MethodDeclarationHelper {
 	}
 
 	@SuppressWarnings("unchecked")
-	public void addParameter(String name, String type) {
-		SingleVariableDeclaration singleVariableDeclaration = ast.newSingleVariableDeclaration();
-		singleVariableDeclaration.setName(ast.newSimpleName(name));
-		singleVariableDeclaration.setType(ast.newSimpleType(ast.newSimpleName(type)));
-		this.declaration.parameters().add(singleVariableDeclaration);
+	private void addParameter(String name, String type) {
+		if (TUtils.isPrimitiveType(type)) {
+			this.addParameter(name, TUtils.stringToPrimitiveCode(type));
+		} else {
+			SingleVariableDeclaration singleVariableDeclaration = ast.newSingleVariableDeclaration();
+			singleVariableDeclaration.setName(ast.newSimpleName(name));
+			singleVariableDeclaration.setType(ast.newSimpleType(ast.newSimpleName(type)));
+			this.declaration.parameters().add(singleVariableDeclaration);
+		}
 	}
 
 	@SuppressWarnings("unchecked")
 	public void addParameter(String name, String genericType, String... types) {
-		SingleVariableDeclaration singleVariableDeclaration = ast.newSingleVariableDeclaration();
-		singleVariableDeclaration.setName(ast.newSimpleName(name));
 
-		ParameterizedType parameterizedType = ast.newParameterizedType(ast.newSimpleType(ast.newSimpleName(genericType)));
-		for (String type : types) {
-			parameterizedType.typeArguments().add(ast.newSimpleType(ast.newSimpleName(type)));
+		if (!StringUtils.isEmpty(genericType)) {
+
+			SingleVariableDeclaration singleVariableDeclaration = ast.newSingleVariableDeclaration();
+			singleVariableDeclaration.setName(ast.newSimpleName(name));
+
+			ParameterizedType parameterizedType = ast
+					.newParameterizedType(ast.newSimpleType(ast.newSimpleName(genericType)));
+			for (String type : types) {
+				parameterizedType.typeArguments().add(ast.newSimpleType(ast.newSimpleName(type)));
+			}
+			singleVariableDeclaration.setType(parameterizedType);
+
+			this.declaration.parameters().add(singleVariableDeclaration);
+		} else {
+			if (types != null && types.length == 1) {
+				this.addParameter(name, types[0]);
+			}
 		}
-		singleVariableDeclaration.setType(parameterizedType);
-
-		this.declaration.parameters().add(singleVariableDeclaration);
 	}
 
 }
