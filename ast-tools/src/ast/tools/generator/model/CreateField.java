@@ -13,7 +13,6 @@ import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlList;
 import javax.xml.bind.annotation.XmlType;
 
-import org.apache.commons.lang.StringUtils;
 import org.eclipse.jdt.core.dom.AST;
 
 import ast.tools.context.ASTWriter;
@@ -22,7 +21,6 @@ import ast.tools.generator.core.IGeneratorElement;
 import ast.tools.helper.CompilationUnitHelper;
 import ast.tools.helper.FieldDeclarationHelper;
 import ast.tools.model.TModifier;
-import ast.tools.util.TUtils;
 
 @XmlType
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -125,14 +123,8 @@ public class CreateField implements IGeneratorElement {
 			@Override
 			public void write(CompilationUnitHelper unitHelper, AST ast) {
 				FieldDeclarationHelper helper = new FieldDeclarationHelper(ast, getName(), modifiers);
-				if (!StringUtils.isEmpty(getGenericType())) {
-					helper.setType(genericType, getTypes());
-				} else if (getTypes().length == 1 && TUtils.isPrimitiveType(getTypes()[0])) {
-					helper.setType(TUtils.stringToPrimitiveCode(getTypes()[0]));
-				} else if (getTypes().length == 1) {
-					helper.setType(getTypes()[0]);
-				}
-				unitHelper.addFieldDeclaration(helper.getFieldDeclaration());
+				helper.setType(getGenericType(), getTypes());
+				unitHelper.addField(helper.getFieldDeclaration());
 			}
 		};
 	}
