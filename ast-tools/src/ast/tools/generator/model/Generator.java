@@ -12,29 +12,29 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Generator {
 
-	@XmlElement(name = "compilation-unit")
-	private List<CompilationUnit> compilationUnits;
+	@XmlElement(name = "update-class")
+	private List<UpdateClass> updateClass;
 
 	public Generator() {
 		super();
-		this.compilationUnits = new ArrayList<CompilationUnit>();
+		this.updateClass = new ArrayList<UpdateClass>();
 	}
 
-	public List<CompilationUnit> getCompilationUnits() {
-		return compilationUnits;
+	public List<UpdateClass> getUpdateClass() {
+		return updateClass;
 	}
 
-	public void setCompilationUnits(List<CompilationUnit> compilationUnits) {
-		this.compilationUnits = compilationUnits;
+	public void setUpdateClass(List<UpdateClass> updateClass) {
+		this.updateClass = updateClass;
 	}
 
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("Generator [");
-		if (compilationUnits != null) {
+		if (updateClass != null) {
 			builder.append("compilationUnits=");
-			builder.append(compilationUnits);
+			builder.append(updateClass);
 		}
 		builder.append("]");
 		return builder.toString();
