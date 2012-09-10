@@ -32,6 +32,7 @@ public class ASTProcessor extends ASTObservable {
 	private ICompilationUnit iunit;
 	private CompilationUnit unit;
 	private TClass tClass;
+	private boolean isRecordModifications;
 
 	public ASTProcessor(ICompilationUnit iunit) {
 		super();
@@ -85,7 +86,10 @@ public class ASTProcessor extends ASTObservable {
 	}
 
 	public void write(ASTWriter writer) {
-		this.unit.recordModifications();
+		if (isRecordModifications == false) {
+			this.unit.recordModifications();
+			isRecordModifications = true;
+		}
 		writer.write(new CompilationUnitHelper(this.unit), this.unit.getAST());
 	}
 
@@ -106,6 +110,8 @@ public class ASTProcessor extends ASTObservable {
 			e.printStackTrace();
 		} catch (BadLocationException e) {
 			e.printStackTrace();
+		} finally {
+			isRecordModifications = false;
 		}
 	}
 }
