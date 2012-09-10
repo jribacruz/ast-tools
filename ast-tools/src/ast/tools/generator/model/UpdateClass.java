@@ -1,19 +1,24 @@
 package ast.tools.generator.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlType;
 
+import org.eclipse.jdt.core.ICompilationUnit;
+import org.eclipse.jdt.core.IJavaProject;
+
+import plugin.commons.util.ProjectUtils;
 import ast.tools.generator.context.GeneratorContext;
+import ast.tools.generator.core.IGeneratorElement;
 
 @XmlType
 @XmlAccessorType(XmlAccessType.FIELD)
-public class CompilationUnit {
+public class UpdateClass {
 
 	@XmlAttribute(required = true)
 	private String name;
@@ -21,19 +26,16 @@ public class CompilationUnit {
 	@XmlAttribute(name = "package", required = true)
 	private String packageName;
 
-	@XmlElementWrapper(name = "imports")
 	@XmlElement(name = "create-import")
 	private List<CreateImport> imports;
 
-	@XmlElementWrapper(name = "fields")
 	@XmlElement(name = "create-field")
 	private List<CreateField> fields;
 
-	@XmlElementWrapper(name = "methods")
 	@XmlElement(name = "create-method")
 	private List<CreateMethod> methods;
 
-	public CompilationUnit() {
+	public UpdateClass() {
 		super();
 	}
 
@@ -75,6 +77,18 @@ public class CompilationUnit {
 
 	public void setMethods(List<CreateMethod> methods) {
 		this.methods = methods;
+	}
+
+	public List<IGeneratorElement> getGeneratorElements() {
+		List<IGeneratorElement> elements = new ArrayList<IGeneratorElement>();
+		elements.addAll(getImports());
+		elements.addAll(getFields());
+		elements.addAll(getMethods());
+		return elements;
+	}
+
+	public ICompilationUnit getCompilationUnit(IJavaProject javaProject) {
+		return ProjectUtils.getCompilationUnit(javaProject, this.getPackageName(), this.getName());
 	}
 
 	@Override
