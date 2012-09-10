@@ -2,7 +2,10 @@ package ast.tools.util;
 
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
+
+import org.eclipse.jdt.core.dom.PrimitiveType;
 
 import ast.tools.internal.model.impl.TAnnotationImpl;
 import ast.tools.internal.model.impl.TImportImpl;
@@ -13,8 +16,12 @@ import ast.tools.model.TImport;
 import ast.tools.model.TMethod;
 
 import com.google.common.base.Predicate;
+import com.google.common.collect.Lists;
 
 public class TUtils {
+
+	private static final List<String> PRIMITIVE_TYPES = Lists.newArrayList("int", "byte", "short", "long", "float",
+			"double", "char", "boolean", "void");
 
 	public static TField findAttribute(TClass tClass, Predicate<TField> predicate) {
 		for (TField attribute : tClass.getFields()) {
@@ -70,5 +77,34 @@ public class TUtils {
 
 	public static boolean hasImport(Set<TImport> imports, String name) {
 		return imports.contains(new TImportImpl(name));
+	}
+
+	public static boolean isPrimitiveType(String type) {
+		return PRIMITIVE_TYPES.contains(type);
+	}
+
+	public static PrimitiveType.Code stringToPrimitiveCode(String type) {
+		if (isPrimitiveType(type)) {
+			if (type.equals("int")) {
+				return PrimitiveType.INT;
+			} else if (type.equals("byte")) {
+				return PrimitiveType.BYTE;
+			} else if (type.equals("short")) {
+				return PrimitiveType.SHORT;
+			} else if (type.equals("long")) {
+				return PrimitiveType.LONG;
+			} else if (type.equals("float")) {
+				return PrimitiveType.FLOAT;
+			} else if (type.equals("double")) {
+				return PrimitiveType.DOUBLE;
+			} else if (type.equals("char")) {
+				return PrimitiveType.CHAR;
+			} else if (type.equals("boolean")) {
+				return PrimitiveType.BOOLEAN;
+			} else if (type.equals("void")) {
+				return PrimitiveType.VOID;
+			}
+		}
+		return null;
 	}
 }
