@@ -12,12 +12,9 @@ import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jface.dialogs.MessageDialog;
 
 import plugin.commons.logger.Log;
-import plugin.commons.util.ProjectUtils;
 import ast.tools.core.ASTProcessor;
-import ast.tools.generator.internal.function.FieldFunction;
-import ast.tools.generator.internal.function.ImportFunction;
-import ast.tools.generator.model.CompilationUnit;
 import ast.tools.generator.model.Generator;
+import ast.tools.generator.model.UpdateClass;
 import ast.tools.generator.utils.GeneratorUtils;
 
 public class GeneratorProcessor {
@@ -33,6 +30,9 @@ public class GeneratorProcessor {
 		this.init();
 	}
 
+	/**
+	 * Inicializa o context do JAXB com o arquivo xml especificado (genfile)
+	 */
 	private void init() {
 		try {
 			log.info("Iniciando geração do arquivo " + genfile);
@@ -47,26 +47,28 @@ public class GeneratorProcessor {
 
 	}
 
+	/**
+	 * Gera os artefatos oriundos do arquivo de geração (genfile)
+	 */
 	public void generate() {
 		if (this.generator != null) {
-			for (CompilationUnit unitModel : this.generator.getCompilationUnits()) {
-				String compilationUnitName = unitModel.getName();
-				String compilationUnitPackage = unitModel.getPackageName();
-				ICompilationUnit compilationUnit = ProjectUtils.getCompilationUnit(javaProject, compilationUnitPackage,
-						compilationUnitName);
+			for (UpdateClass updateClass : this.generator.getUpdateClass()) {
+				ICompilationUnit compilationUnit = updateClass.getCompilationUnit(javaProject);
 				if (compilationUnit != null) {
 					log.info("Atualizando unidade de compilação: " + compilationUnit.getElementName());
 					ASTProcessor processor = new ASTProcessor(compilationUnit);
-					GeneratorUtils.forAllDo(unitModel.getImports(), processor, new ImportFunction());
-					GeneratorUtils.forAllDo(unitModel.getFields(), processor, new FieldFunction());
+
+					GeneratorUtils.forAllDo(updateClass.getGeneratorElements(), processor);
+
 					processor.commit();
 					log.info("Unidade de compilação atualizada com sucesso: " + compilationUnit.getElementName());
 
 				} else {
-					log.error("Unidade de compilação " + compilationUnitPackage + "." + compilationUnitName
+					log.error("Unidade de compilação " + updateClass.getPackageName() + "." + updateClass.getName()
 							+ " não encontrada");
 				}
 			}
 		}
 	}
+
 }
