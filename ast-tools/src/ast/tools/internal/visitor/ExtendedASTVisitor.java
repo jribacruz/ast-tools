@@ -30,7 +30,7 @@ import ast.tools.internal.transformer.MarkerAnnotationTransformer;
 import ast.tools.internal.transformer.NormalAnnotationTransformer;
 import ast.tools.internal.transformer.SingleMemberAnnotationTransformer;
 import ast.tools.model.TAnnotation;
-import ast.tools.model.TAttribute;
+import ast.tools.model.TField;
 import ast.tools.model.TClass;
 import ast.tools.model.TImport;
 import ast.tools.model.TMethod;
@@ -48,7 +48,7 @@ public class ExtendedASTVisitor extends ASTVisitor {
 	protected String superClassName;
 	protected String packageName;
 	protected Set<TAnnotation> annotations;
-	protected Set<TAttribute> attributes;
+	protected Set<TField> fields;
 	protected Set<TMethod> methods;
 	protected Set<TImport> imports;
 	protected Set<String> interfaces;
@@ -58,7 +58,7 @@ public class ExtendedASTVisitor extends ASTVisitor {
 	public ExtendedASTVisitor() {
 		super();
 		this.annotations = new HashSet<TAnnotation>();
-		this.attributes = new HashSet<TAttribute>();
+		this.fields = new HashSet<TField>();
 		this.methods = new HashSet<TMethod>();
 		this.imports = new HashSet<TImport>();
 		this.interfaces = new HashSet<String>();
@@ -75,7 +75,7 @@ public class ExtendedASTVisitor extends ASTVisitor {
 	}
 
 	public TClass getTClass() {
-		return new TClassImpl(className, packageName, imports, annotations, interfaces, attributes, methods, genericTypeArguments,
+		return new TClassImpl(className, packageName, imports, annotations, interfaces, fields, methods, genericTypeArguments,
 				superClassName, superClassGenericTypeArguments);
 	}
 
