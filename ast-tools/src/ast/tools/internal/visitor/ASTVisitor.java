@@ -12,11 +12,11 @@ import org.eclipse.jdt.core.dom.TypeDeclaration;
 import ast.tools.context.ASTContext;
 import ast.tools.core.ASTProcessor;
 import ast.tools.internal.context.impl.ASTContextImpl;
-import ast.tools.internal.model.impl.TAttributeImpl;
+import ast.tools.internal.model.impl.TFieldImpl;
 import ast.tools.internal.model.impl.TImportImpl;
 import ast.tools.internal.model.impl.TMethodImpl;
 import ast.tools.model.TAnnotation;
-import ast.tools.model.TAttribute;
+import ast.tools.model.TField;
 import ast.tools.model.TMethod;
 import ast.tools.model.TModifier;
 import ast.tools.model.TParameter;
@@ -77,9 +77,9 @@ public class ASTVisitor extends ExtendedASTVisitor {
 		Set<TModifier> modifiers = getModifiers(declaration);
 
 		// cria o objeto TAttribute
-		TAttribute attribute = new TAttributeImpl(name, types, genericType, attributeAnnotations, modifiers);
+		TField attribute = new TFieldImpl(name, types, genericType, attributeAnnotations, modifiers);
 
-		this.attributes.add(attribute);
+		this.fields.add(attribute);
 
 		// notifica os observadores de attributos (ASTAttributeObservers)
 		processor.notifyAttributeObservers(name, types, genericType, modifiers, attributeAnnotations);
@@ -110,7 +110,7 @@ public class ASTVisitor extends ExtendedASTVisitor {
 	}
 
 	public ASTContext getContext() {
-		return this.context == null ? new ASTContextImpl(isInterface, className, annotations, attributes, methods, imports,
+		return this.context == null ? new ASTContextImpl(isInterface, className, annotations, fields, methods, imports,
 				interfaces, packageName, superClassName, genericTypeArguments, superClassGenericTypeArguments)
 		: this.context;
 	}
