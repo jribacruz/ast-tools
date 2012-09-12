@@ -7,9 +7,11 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.jdt.core.dom.ASTVisitor;
 import org.eclipse.jdt.core.dom.BodyDeclaration;
 import org.eclipse.jdt.core.dom.FieldDeclaration;
+import org.eclipse.jdt.core.dom.Javadoc;
 import org.eclipse.jdt.core.dom.MarkerAnnotation;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.NormalAnnotation;
@@ -17,12 +19,15 @@ import org.eclipse.jdt.core.dom.ParameterizedType;
 import org.eclipse.jdt.core.dom.SimpleType;
 import org.eclipse.jdt.core.dom.SingleMemberAnnotation;
 import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
+import org.eclipse.jdt.core.dom.TagElement;
+import org.eclipse.jdt.core.dom.TextElement;
 import org.eclipse.jdt.core.dom.Type;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 
 import ast.tools.internal.model.impl.TClassImpl;
 import ast.tools.internal.model.impl.TParameterImpl;
+import ast.tools.internal.model.impl.TTagImpl;
 import ast.tools.internal.predicate.MarkerAnnotationPredicate;
 import ast.tools.internal.predicate.NormalAnnotationPredicate;
 import ast.tools.internal.predicate.SingleMemberAnnotationPredicate;
@@ -30,12 +35,13 @@ import ast.tools.internal.transformer.MarkerAnnotationTransformer;
 import ast.tools.internal.transformer.NormalAnnotationTransformer;
 import ast.tools.internal.transformer.SingleMemberAnnotationTransformer;
 import ast.tools.model.TAnnotation;
-import ast.tools.model.TField;
 import ast.tools.model.TClass;
+import ast.tools.model.TField;
 import ast.tools.model.TImport;
 import ast.tools.model.TMethod;
 import ast.tools.model.TModifier;
 import ast.tools.model.TParameter;
+import ast.tools.model.TTag;
 
 import com.google.common.collect.Lists;
 
@@ -54,6 +60,7 @@ public class ExtendedASTVisitor extends ASTVisitor {
 	protected Set<String> interfaces;
 	protected List<String> genericTypeArguments;
 	protected List<String> superClassGenericTypeArguments;
+	protected List<TTag> tags;
 
 	public ExtendedASTVisitor() {
 		super();
@@ -64,6 +71,7 @@ public class ExtendedASTVisitor extends ASTVisitor {
 		this.interfaces = new HashSet<String>();
 		this.genericTypeArguments = new ArrayList<String>();
 		this.superClassGenericTypeArguments = new ArrayList<String>();
+		this.tags = new ArrayList<TTag>();
 
 	}
 
@@ -75,8 +83,8 @@ public class ExtendedASTVisitor extends ASTVisitor {
 	}
 
 	public TClass getTClass() {
-		return new TClassImpl(className, packageName, imports, annotations, interfaces, fields, methods, genericTypeArguments,
-				superClassName, superClassGenericTypeArguments);
+		return new TClassImpl(className, packageName, imports, annotations, interfaces, fields, methods,
+				genericTypeArguments, superClassName, superClassGenericTypeArguments, tags);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -244,4 +252,18 @@ public class ExtendedASTVisitor extends ASTVisitor {
 		return CollectionUtils.collect(normalAnnotationList, new NormalAnnotationTransformer());
 	}
 
+	@SuppressWarnings("unchecked")
+	protected List<TTag> getTags(Javadoc javadoc) {
+		List<TTag> tags = new ArrayList<TTag>();
+		List<TagElement> elements = javadoc.tags();
+		for (TagElement tagElement : elements) {
+			if (!StringUtils.isEmpty(tagElement.getTagName())) {
+				List<TextElement> fragments = tagElement.fragments();
+				if (!fragments.isEmpty()) {
+					tags.add(new TTagImpl(tagElement.getTagName().substring(1), fragments.get(0).getText()));
+				}
+			}
+		}
+		return tags;
+	}
 }

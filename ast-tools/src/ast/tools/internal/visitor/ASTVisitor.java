@@ -20,6 +20,7 @@ import ast.tools.model.TField;
 import ast.tools.model.TMethod;
 import ast.tools.model.TModifier;
 import ast.tools.model.TParameter;
+import ast.tools.model.TTag;
 
 public class ASTVisitor extends ExtendedASTVisitor {
 
@@ -55,9 +56,10 @@ public class ASTVisitor extends ExtendedASTVisitor {
 			this.superClassName = getSuperClassName(declaration);
 			this.interfaces = getInterfaces(declaration);
 			this.annotations = processAnnotations(declaration);
+			this.tags = getTags(declaration.getJavadoc());
 			// Notifica os observadores da classe (ASTClassObservers)
 			processor.notifyClassObservers(this.className, this.genericTypeArguments, this.superClassName,
-					this.superClassGenericTypeArguments, this.annotations, this.interfaces);
+					this.superClassGenericTypeArguments, this.annotations, this.interfaces, this.tags);
 		} else {
 			this.className = declaration.getName().toString();
 			if (declaration.getSuperclassType() != null) {
@@ -75,14 +77,14 @@ public class ASTVisitor extends ExtendedASTVisitor {
 		String genericType = getGenericType(declaration);
 		Set<TAnnotation> attributeAnnotations = processAnnotations(declaration);
 		Set<TModifier> modifiers = getModifiers(declaration);
-
+		List<TTag> tags = getTags(declaration.getJavadoc());
 		// cria o objeto TAttribute
-		TField attribute = new TFieldImpl(name, types, genericType, attributeAnnotations, modifiers);
+		TField attribute = new TFieldImpl(name, types, genericType, attributeAnnotations, modifiers, tags);
 
 		this.fields.add(attribute);
 
 		// notifica os observadores de attributos (ASTAttributeObservers)
-		processor.notifyAttributeObservers(name, types, genericType, modifiers, attributeAnnotations);
+		processor.notifyAttributeObservers(name, types, genericType, modifiers, attributeAnnotations, tags);
 
 		return super.visit(declaration);
 	}
@@ -98,13 +100,15 @@ public class ASTVisitor extends ExtendedASTVisitor {
 		Set<TModifier> modifiers = getModifiers(declaration);
 		Set<TParameter> parameters = getParameters(declaration);
 		List<String> thrownExceptions = declaration.thrownExceptions();
+		List<TTag> tags = getTags(declaration.getJavadoc());
+
 		TMethod method = new TMethodImpl(name, parameters, methodAnnotations, modifiers, returnTypes, returnGenericType,
-				constructor, thrownExceptions);
+				constructor, thrownExceptions, tags);
 
 		this.methods.add(method);
 
 		processor.notifyMethodObservers(name, returnTypes, returnGenericType, modifiers, parameters, methodAnnotations,
-				constructor, thrownExceptions);
+				constructor, thrownExceptions, tags);
 
 		return super.visit(declaration);
 	}
