@@ -5,7 +5,8 @@ import java.util.Set;
 
 import ast.tools.model.TAnnotation;
 import ast.tools.model.TModifier;
+import ast.tools.model.TTag;
 
 public interface ASTAttributeObserver {
-	void update(String name, List<String> types, String genericType, Set<TModifier> modifiers, Set<TAnnotation> annotations);
+	void update(String name, List<String> types, String genericType, Set<TModifier> modifiers, Set<TAnnotation> annotations, List<TTag> tags);
 }

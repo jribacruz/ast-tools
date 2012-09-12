@@ -8,6 +8,7 @@ import java.util.Set;
 import ast.tools.model.TAnnotation;
 import ast.tools.model.TModifier;
 import ast.tools.model.TParameter;
+import ast.tools.model.TTag;
 import ast.tools.observer.ASTAttributeObserver;
 import ast.tools.observer.ASTClassObserver;
 import ast.tools.observer.ASTImportObserver;
@@ -38,12 +39,13 @@ public class ASTObservable {
 	 * @param interfaces
 	 */
 	public void notifyClassObservers(String className, List<String> genericTypeArguments, String superClassName,
-			List<String> superClassGenericTypeArguments, Set<TAnnotation> annotations, Set<String> interfaces) {
+			List<String> superClassGenericTypeArguments, Set<TAnnotation> annotations, Set<String> interfaces,
+			List<TTag> tags) {
 		Iterator<ASTClassObserver> iterator = classObservers.iterator();
 		while (iterator.hasNext()) {
 			ASTClassObserver classObserver = iterator.next();
 			classObserver.update(className, genericTypeArguments, superClassName, superClassGenericTypeArguments,
-					annotations, interfaces);
+					annotations, interfaces, tags);
 		}
 	}
 
@@ -56,11 +58,11 @@ public class ASTObservable {
 	 * @param annotations
 	 */
 	public void notifyAttributeObservers(String name, List<String> types, String genericType, Set<TModifier> modifiers,
-			Set<TAnnotation> annotations) {
+			Set<TAnnotation> annotations, List<TTag> tags) {
 		Iterator<ASTAttributeObserver> iterator = attributeObservers.iterator();
 		while (iterator.hasNext()) {
 			ASTAttributeObserver attributeObserver = iterator.next();
-			attributeObserver.update(name, types, genericType, modifiers, annotations);
+			attributeObserver.update(name, types, genericType, modifiers, annotations, tags);
 		}
 	}
 
@@ -74,11 +76,13 @@ public class ASTObservable {
 	 * @param annotations
 	 */
 	public void notifyMethodObservers(String name, List<String> returnTypes, String genericReturnType,
-			Set<TModifier> modifiers, Set<TParameter> parameters, Set<TAnnotation> annotations, boolean constructor, List<String> thrownExceptions) {
+			Set<TModifier> modifiers, Set<TParameter> parameters, Set<TAnnotation> annotations, boolean constructor,
+			List<String> thrownExceptions, List<TTag> tags) {
 		Iterator<ASTMethodObserver> iterator = methodObservers.iterator();
 		while (iterator.hasNext()) {
 			ASTMethodObserver methodObserver = iterator.next();
-			methodObserver.update(name, returnTypes, genericReturnType, modifiers, parameters, annotations, constructor, thrownExceptions);
+			methodObserver.update(name, returnTypes, genericReturnType, modifiers, parameters, annotations, constructor,
+					thrownExceptions, tags);
 		}
 	}
 
