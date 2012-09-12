@@ -7,6 +7,7 @@ import ast.tools.model.TAnnotation;
 import ast.tools.model.TMethod;
 import ast.tools.model.TModifier;
 import ast.tools.model.TParameter;
+import ast.tools.model.TTag;
 
 public class TMethodImpl implements TMethod {
 
@@ -18,9 +19,11 @@ public class TMethodImpl implements TMethod {
 	private String returnGenericType;
 	private boolean constructor;
 	private List<String> thrownExceptions;
+	private List<TTag> tags;
 
 	public TMethodImpl(String name, Set<TParameter> parameters, Set<TAnnotation> annotations, Set<TModifier> modifiers,
-			List<String> returnTypes, String returnGenericType, boolean constructor, List<String> thrownExceptions) {
+			List<String> returnTypes, String returnGenericType, boolean constructor, List<String> thrownExceptions,
+			List<TTag> tags) {
 		super();
 		this.name = name;
 		this.parameters = parameters;
@@ -30,6 +33,7 @@ public class TMethodImpl implements TMethod {
 		this.returnGenericType = returnGenericType;
 		this.constructor = constructor;
 		this.thrownExceptions = thrownExceptions;
+		this.tags = tags;
 	}
 
 	@Override
@@ -70,6 +74,11 @@ public class TMethodImpl implements TMethod {
 	@Override
 	public List<String> getThrownExceptions() {
 		return this.thrownExceptions;
+	}
+
+	@Override
+	public List<TTag> getTags() {
+		return this.tags;
 	}
 
 	@Override

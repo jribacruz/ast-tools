@@ -13,4 +13,6 @@ public interface TField {
 	Set<TAnnotation> getAnnotations();
 
 	Set<TModifier> getModifiers();
+
+	List<TTag> getTags();
 }

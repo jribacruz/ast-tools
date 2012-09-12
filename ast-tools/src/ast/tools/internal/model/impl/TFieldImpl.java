@@ -6,6 +6,7 @@ import java.util.Set;
 import ast.tools.model.TAnnotation;
 import ast.tools.model.TField;
 import ast.tools.model.TModifier;
+import ast.tools.model.TTag;
 
 public class TFieldImpl implements TField {
 
@@ -14,15 +15,17 @@ public class TFieldImpl implements TField {
 	private String genericType;
 	private Set<TAnnotation> annotations;
 	private Set<TModifier> modifiers;
+	private List<TTag> tags;
 
 	public TFieldImpl(String name, List<String> types, String genericType, Set<TAnnotation> annotations,
-			Set<TModifier> modifiers) {
+			Set<TModifier> modifiers, List<TTag> tags) {
 		super();
 		this.name = name;
 		this.types = types;
 		this.genericType = genericType;
 		this.annotations = annotations;
 		this.modifiers = modifiers;
+		this.tags = tags;
 	}
 
 	@Override
@@ -48,6 +51,11 @@ public class TFieldImpl implements TField {
 	@Override
 	public Set<TModifier> getModifiers() {
 		return this.modifiers;
+	}
+
+	@Override
+	public List<TTag> getTags() {
+		return this.tags;
 	}
 
 	@Override

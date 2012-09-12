@@ -24,4 +24,6 @@ public interface TClass {
 	Set<TMethod> getMethods();
 
 	Set<TImport> getImports();
+
+	List<TTag> getTags();
 }

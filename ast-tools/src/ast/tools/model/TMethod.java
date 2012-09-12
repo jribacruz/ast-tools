@@ -19,4 +19,6 @@ public interface TMethod {
 	Set<TModifier> getModifiers();
 
 	List<String> getThrownExceptions();
+
+	List<TTag> getTags();
 }

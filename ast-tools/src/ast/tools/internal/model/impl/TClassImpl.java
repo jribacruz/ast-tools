@@ -8,6 +8,7 @@ import ast.tools.model.TClass;
 import ast.tools.model.TField;
 import ast.tools.model.TImport;
 import ast.tools.model.TMethod;
+import ast.tools.model.TTag;
 
 public class TClassImpl implements TClass {
 
@@ -21,25 +22,27 @@ public class TClassImpl implements TClass {
 	private List<String> genericTypeArguments;
 	private String superClassName;
 	private List<String> superClassGenericTypeArguments;
+	private List<TTag> tags;
 
 	public TClassImpl() {
 		super();
 	}
 
 	public TClassImpl(String name, String packageName, Set<TImport> imports, Set<TAnnotation> annotations,
-			Set<String> interfaces, Set<TField> attributes, Set<TMethod> methods, List<String> genericTypeArguments,
-			String superClassName, List<String> superClassGenericTypeArguments) {
+			Set<String> interfaces, Set<TField> fields, Set<TMethod> methods, List<String> genericTypeArguments,
+			String superClassName, List<String> superClassGenericTypeArguments, List<TTag> tags) {
 		super();
 		this.name = name;
 		this.packageName = packageName;
 		this.imports = imports;
 		this.annotations = annotations;
 		this.interfaces = interfaces;
-		this.fields = attributes;
+		this.fields = fields;
 		this.methods = methods;
 		this.genericTypeArguments = genericTypeArguments;
 		this.superClassName = superClassName;
 		this.superClassGenericTypeArguments = superClassGenericTypeArguments;
+		this.tags = tags;
 	}
 
 	@Override
@@ -90,6 +93,11 @@ public class TClassImpl implements TClass {
 	@Override
 	public List<String> getSuperClassGenericTypeArguments() {
 		return this.superClassGenericTypeArguments;
+	}
+
+	@Override
+	public List<TTag> getTags() {
+		return this.tags;
 	}
 
 	@Override
