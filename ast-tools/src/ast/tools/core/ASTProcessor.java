@@ -21,7 +21,6 @@ import org.eclipse.text.edits.TextEdit;
 
 import ast.tools.context.ASTContext;
 import ast.tools.context.ASTWriter;
-import ast.tools.helper.CompilationUnitHelper;
 import ast.tools.internal.context.impl.ASTContextImpl;
 import ast.tools.internal.model.impl.TClassImpl;
 import ast.tools.internal.visitor.ASTVisitor;
@@ -90,7 +89,7 @@ public class ASTProcessor extends ASTObservable {
 			this.unit.recordModifications();
 			isRecordModifications = true;
 		}
-		writer.write(new CompilationUnitHelper(this.unit), this.unit.getAST());
+		writer.write(this.unit, this.unit.getAST());
 	}
 
 	public void commit() {

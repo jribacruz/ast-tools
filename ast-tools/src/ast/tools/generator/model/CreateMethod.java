@@ -13,6 +13,7 @@ import javax.xml.bind.annotation.XmlList;
 import javax.xml.bind.annotation.XmlType;
 
 import org.eclipse.jdt.core.dom.AST;
+import org.eclipse.jdt.core.dom.CompilationUnit;
 
 import ast.tools.context.ASTWriter;
 import ast.tools.generator.context.GeneratorContext;
@@ -166,7 +167,8 @@ public class CreateMethod implements IGeneratorElement {
 		return new ASTWriter() {
 
 			@Override
-			public void write(CompilationUnitHelper unitHelper, AST ast) {
+			public void write(CompilationUnit unit, AST ast) {
+				CompilationUnitHelper unitHelper = new CompilationUnitHelper(unit);
 				MethodDeclarationHelper helper;
 				if (constructor) {
 					helper = new MethodDeclarationHelper(ast, getName(), modifiers, constructor);

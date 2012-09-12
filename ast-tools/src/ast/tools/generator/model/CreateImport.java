@@ -7,6 +7,7 @@ import javax.xml.bind.annotation.XmlType;
 
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.jdt.core.dom.AST;
+import org.eclipse.jdt.core.dom.CompilationUnit;
 
 import ast.tools.context.ASTWriter;
 import ast.tools.generator.context.GeneratorContext;
@@ -30,7 +31,8 @@ public class CreateImport implements IGeneratorElement {
 		return new ASTWriter() {
 
 			@Override
-			public void write(CompilationUnitHelper unitHelper, AST ast) {
+			public void write(CompilationUnit unit, AST ast) {
+				CompilationUnitHelper unitHelper = new CompilationUnitHelper(unit);
 				ImportDeclarationHelper helper = new ImportDeclarationHelper(ast, getNames());
 				unitHelper.addImport(helper.getDeclaration());
 			}

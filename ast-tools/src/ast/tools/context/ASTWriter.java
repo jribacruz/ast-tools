@@ -1,9 +1,8 @@
 package ast.tools.context;
 
 import org.eclipse.jdt.core.dom.AST;
-
-import ast.tools.helper.CompilationUnitHelper;
+import org.eclipse.jdt.core.dom.CompilationUnit;
 
 public interface ASTWriter {
-	public void write(CompilationUnitHelper unitHelper, AST ast);
+	public void write(CompilationUnit unit, AST ast);
 }
