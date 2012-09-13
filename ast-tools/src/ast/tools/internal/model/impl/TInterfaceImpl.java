@@ -16,12 +16,12 @@ public class TInterfaceImpl implements TInterface {
 	private String packageName;
 	private Set<TImport> imports;
 
-	private TInterfaceImpl(String name, TInterface superInterface, Set<TField> attributes, Set<TMethod> methods,
+	public TInterfaceImpl(String name, TInterface superInterface, Set<TField> fields, Set<TMethod> methods,
 			String packageName, Set<TImport> imports) {
 		super();
 		this.name = name;
 		this.superInterface = superInterface;
-		this.fields = attributes;
+		this.fields = fields;
 		this.methods = methods;
 		this.packageName = packageName;
 		this.imports = imports;
