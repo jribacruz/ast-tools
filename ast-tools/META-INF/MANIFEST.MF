@@ -17,7 +17,6 @@ Require-Bundle: org.eclipse.jdt;bundle-version="3.7.2",
  org.eclipse.ui;bundle-version="3.7.0"
 Export-Package: ast.tools.context,
  ast.tools.core,
- ast.tools.helper,
  ast.tools.model,
  ast.tools.observable,
  ast.tools.observer,
