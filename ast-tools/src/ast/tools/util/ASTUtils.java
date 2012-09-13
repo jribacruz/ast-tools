@@ -10,7 +10,6 @@ import org.eclipse.jdt.core.dom.PrimitiveType;
 import org.eclipse.jface.dialogs.MessageDialog;
 
 import ast.tools.context.ASTContext;
-import ast.tools.context.ASTWriter;
 import ast.tools.core.ASTPredicate;
 import ast.tools.core.ASTProcessor;
 import ast.tools.model.TClass;
@@ -41,15 +40,6 @@ public class ASTUtils {
 			}
 		}
 		return unitList.toArray(new ICompilationUnit[] {});
-	}
-
-	public static void forAllWrite(ICompilationUnit[] units, ASTPredicate predicate, ASTWriter writer) {
-		ICompilationUnit[] filteredUnits = filter(units, predicate);
-		for (ICompilationUnit unit : filteredUnits) {
-			ASTProcessor processor = new ASTProcessor(unit);
-			processor.write(writer);
-			processor.commit();
-		}
 	}
 
 	public static TClass getTClass(ICompilationUnit iunit) {
