@@ -22,6 +22,12 @@ import ast.tools.model.TModifier;
 import ast.tools.model.TParameter;
 import ast.tools.model.TTag;
 
+/**
+ * Classe que processa a classe, os campos
+ * 
+ * @author jrmc
+ * 
+ */
 public class ASTVisitor extends ExtendedASTVisitor {
 
 	protected ASTContext context;
@@ -32,12 +38,18 @@ public class ASTVisitor extends ExtendedASTVisitor {
 		this.processor = processor;
 	}
 
+	/**
+	 * processa a informação do pacote (nome qualificado do pacote)
+	 */
 	@Override
 	public boolean visit(PackageDeclaration node) {
 		this.packageName = node.getName().toString();
 		return super.visit(node);
 	}
 
+	/**
+	 * processa os dados do import (nome qualificado do import)
+	 */
 	@Override
 	public boolean visit(ImportDeclaration node) {
 		imports.add(new TImportImpl(node.getName().toString()));
@@ -45,6 +57,10 @@ public class ASTVisitor extends ExtendedASTVisitor {
 		return super.visit(node);
 	}
 
+	/**
+	 * processa os dados gerais da classe (nome, extenções, implementações, e
+	 * possíveis tipos genéricos)
+	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public boolean visit(TypeDeclaration declaration) {
@@ -65,11 +81,17 @@ public class ASTVisitor extends ExtendedASTVisitor {
 			if (declaration.getSuperclassType() != null) {
 				// this.superClassName = node.getSuperclassType().toString();
 			}
+			// Notifica os observadores da classe (ASTClassObservers)
 			processor.notifyInterfaceObservers(this.className, this.superClassName, this.genericTypeArguments);
 		}
 		return super.visit(declaration);
 	}
 
+	/**
+	 * Processa os campos da classe e adiciona na lista de campos da classe,
+	 * 
+	 * 
+	 */
 	@Override
 	public boolean visit(FieldDeclaration declaration) {
 		String name = getName(declaration);
@@ -102,11 +124,12 @@ public class ASTVisitor extends ExtendedASTVisitor {
 		List<String> thrownExceptions = declaration.thrownExceptions();
 		List<TTag> tags = getTags(declaration.getJavadoc());
 
+		// cria o objeto TMethod e adiciona a lista de metodos
 		TMethod method = new TMethodImpl(name, parameters, methodAnnotations, modifiers, returnTypes, returnGenericType,
 				constructor, thrownExceptions, tags);
-
 		this.methods.add(method);
 
+		// notifica os observadores sobre os dados do metodo
 		processor.notifyMethodObservers(name, returnTypes, returnGenericType, modifiers, parameters, methodAnnotations,
 				constructor, thrownExceptions, tags);
 
