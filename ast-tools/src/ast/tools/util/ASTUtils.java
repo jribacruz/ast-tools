@@ -10,13 +10,14 @@ import org.eclipse.jdt.core.dom.PrimitiveType;
 import org.eclipse.jface.dialogs.MessageDialog;
 
 import ast.tools.context.ASTContext;
-import ast.tools.core.ASTPredicate;
 import ast.tools.core.ASTProcessor;
 import ast.tools.model.TClass;
 import ast.tools.model.TModifier;
 
+import com.google.common.base.Predicate;
+
 public class ASTUtils {
-	public static ICompilationUnit find(ICompilationUnit[] units, ASTPredicate predicate) {
+	public static ICompilationUnit find(ICompilationUnit[] units, Predicate<ASTContext> predicate) {
 		for (ICompilationUnit unit : units) {
 			ASTProcessor processor = new ASTProcessor(unit);
 			ASTContext context = processor.visit();
@@ -25,12 +26,12 @@ public class ASTUtils {
 		return null;
 	}
 
-	public static TClass findTClass(ICompilationUnit[] units, ASTPredicate predicate) {
+	public static TClass findTClass(ICompilationUnit[] units, Predicate<ASTContext> predicate) {
 		ICompilationUnit unit = find(units, predicate);
 		return unit != null ? getTClass(unit) : null;
 	}
 
-	public static ICompilationUnit[] filter(ICompilationUnit[] units, ASTPredicate predicate) {
+	public static ICompilationUnit[] filter(ICompilationUnit[] units, Predicate<ASTContext> predicate) {
 		List<ICompilationUnit> unitList = new ArrayList<ICompilationUnit>();
 		for (ICompilationUnit unit : units) {
 			ASTProcessor processor = new ASTProcessor(unit);
