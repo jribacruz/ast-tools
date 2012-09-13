@@ -29,7 +29,7 @@ import ast.tools.model.TTag;
  * @author jrmc
  * 
  */
-public class ASTVisitor extends ExtendedASTVisitor {
+public class ASTVisitor extends Visitor {
 
 	protected ASTContext context;
 	protected ASTProcessor processor;
