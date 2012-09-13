@@ -12,6 +12,7 @@ import org.eclipse.jdt.core.dom.TypeDeclaration;
 import ast.tools.context.ASTContext;
 import ast.tools.core.ASTProcessor;
 import ast.tools.internal.context.impl.ASTContextImpl;
+import ast.tools.internal.model.impl.TClassImpl;
 import ast.tools.internal.model.impl.TFieldImpl;
 import ast.tools.internal.model.impl.TImportImpl;
 import ast.tools.internal.model.impl.TMethodImpl;
@@ -53,7 +54,7 @@ public class ASTVisitor extends ExtendedASTVisitor {
 	@Override
 	public boolean visit(ImportDeclaration node) {
 		imports.add(new TImportImpl(node.getName().toString()));
-		processor.notifyImportObservers(node.getName().toString());
+		processor.notifyObservers(new TImportImpl(node.getName().toString()));
 		return super.visit(node);
 	}
 
@@ -74,15 +75,19 @@ public class ASTVisitor extends ExtendedASTVisitor {
 			this.annotations = processAnnotations(declaration);
 			this.tags = getTags(declaration.getJavadoc());
 			// Notifica os observadores da classe (ASTClassObservers)
-			processor.notifyClassObservers(this.className, this.genericTypeArguments, this.superClassName,
-					this.superClassGenericTypeArguments, this.annotations, this.interfaces, this.tags);
+			processor.notifyObservers(new TClassImpl(className, packageName, imports, annotations, interfaces, fields,
+					methods, genericTypeArguments, superClassName, superClassGenericTypeArguments, tags));
 		} else {
 			this.className = declaration.getName().toString();
 			if (declaration.getSuperclassType() != null) {
 				// this.superClassName = node.getSuperclassType().toString();
 			}
 			// Notifica os observadores da classe (ASTClassObservers)
-			processor.notifyInterfaceObservers(this.className, this.superClassName, this.genericTypeArguments);
+			// processor.notifyObservers(new TInterfaceImpl(name,
+			// superInterface, attributes, methods, packageName, imports));
+			// processor.notifyInterfaceObservers(this.className,
+			// this.superClassName, this.genericTypeArguments);
+
 		}
 		return super.visit(declaration);
 	}
@@ -101,12 +106,12 @@ public class ASTVisitor extends ExtendedASTVisitor {
 		Set<TModifier> modifiers = getModifiers(declaration);
 		List<TTag> tags = getTags(declaration.getJavadoc());
 		// cria o objeto TAttribute
-		TField attribute = new TFieldImpl(name, types, genericType, attributeAnnotations, modifiers, tags);
+		TField field = new TFieldImpl(name, types, genericType, attributeAnnotations, modifiers, tags);
 
-		this.fields.add(attribute);
+		this.fields.add(field);
 
 		// notifica os observadores de attributos (ASTAttributeObservers)
-		processor.notifyAttributeObservers(name, types, genericType, modifiers, attributeAnnotations, tags);
+		processor.notifyObservers(field);
 
 		return super.visit(declaration);
 	}
@@ -130,8 +135,8 @@ public class ASTVisitor extends ExtendedASTVisitor {
 		this.methods.add(method);
 
 		// notifica os observadores sobre os dados do metodo
-		processor.notifyMethodObservers(name, returnTypes, returnGenericType, modifiers, parameters, methodAnnotations,
-				constructor, thrownExceptions, tags);
+		processor.notifyObservers(new TMethodImpl(name, parameters, methodAnnotations, modifiers, returnTypes,
+				returnGenericType, constructor, thrownExceptions, tags));
 
 		return super.visit(declaration);
 	}
