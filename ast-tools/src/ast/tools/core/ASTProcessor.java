@@ -20,7 +20,6 @@ public class ASTProcessor extends ASTObservable {
 	private ICompilationUnit iunit;
 	private CompilationUnit unit;
 	private TClass tClass;
-	private boolean isRecordModifications;
 
 	public ASTProcessor(ICompilationUnit iunit) {
 		super();
