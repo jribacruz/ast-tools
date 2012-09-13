@@ -1,153 +1,35 @@
 package ast.tools.observable;
 
-import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 
-import ast.tools.model.TAnnotation;
-import ast.tools.model.TModifier;
-import ast.tools.model.TParameter;
-import ast.tools.model.TTag;
-import ast.tools.observer.ASTAttributeObserver;
-import ast.tools.observer.ASTClassObserver;
-import ast.tools.observer.ASTImportObserver;
-import ast.tools.observer.ASTInterfaceObserver;
-import ast.tools.observer.ASTMethodObserver;
+import ast.tools.observer.ASTObserver;
+
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.SetMultimap;
 
 public class ASTObservable {
-	private Set<ASTClassObserver> classObservers;
-	private Set<ASTAttributeObserver> attributeObservers;
-	private Set<ASTMethodObserver> methodObservers;
-	private Set<ASTImportObserver> importObservers;
-	private Set<ASTInterfaceObserver> interfaceObservers;
+
+	private SetMultimap<Class<?>, ASTObserver> observers;
 
 	public ASTObservable() {
 		super();
-		this.attributeObservers = new HashSet<ASTAttributeObserver>();
-		this.classObservers = new HashSet<ASTClassObserver>();
-		this.methodObservers = new HashSet<ASTMethodObserver>();
-		this.importObservers = new HashSet<ASTImportObserver>();
-		this.interfaceObservers = new HashSet<ASTInterfaceObserver>();
+		this.observers = HashMultimap.create();
 	}
 
-	/**
-	 * 
-	 * @param className
-	 * @param superClassName
-	 * @param annotations
-	 * @param interfaces
-	 */
-	public void notifyClassObservers(String className, List<String> genericTypeArguments, String superClassName,
-			List<String> superClassGenericTypeArguments, Set<TAnnotation> annotations, Set<String> interfaces,
-			List<TTag> tags) {
-		Iterator<ASTClassObserver> iterator = classObservers.iterator();
-		while (iterator.hasNext()) {
-			ASTClassObserver classObserver = iterator.next();
-			classObserver.update(className, genericTypeArguments, superClassName, superClassGenericTypeArguments,
-					annotations, interfaces, tags);
+	public <T> void notifyObservers(T item) {
+		if (observers.containsKey(item.getClass())) {
+			Set<ASTObserver> observer = observers.get(item.getClass());
+			Iterator<ASTObserver> iterator = observer.iterator();
+			while (iterator.hasNext()) {
+				ASTObserver observer2 = iterator.next();
+				observer2.update(item);
+			}
 		}
 	}
 
-	/**
-	 * 
-	 * @param name
-	 * @param types
-	 * @param genericType
-	 * @param modifiers
-	 * @param annotations
-	 */
-	public void notifyAttributeObservers(String name, List<String> types, String genericType, Set<TModifier> modifiers,
-			Set<TAnnotation> annotations, List<TTag> tags) {
-		Iterator<ASTAttributeObserver> iterator = attributeObservers.iterator();
-		while (iterator.hasNext()) {
-			ASTAttributeObserver attributeObserver = iterator.next();
-			attributeObserver.update(name, types, genericType, modifiers, annotations, tags);
-		}
-	}
-
-	/**
-	 * 
-	 * @param name
-	 * @param returnTypes
-	 * @param genericReturnType
-	 * @param modifiers
-	 * @param parameters
-	 * @param annotations
-	 */
-	public void notifyMethodObservers(String name, List<String> returnTypes, String genericReturnType,
-			Set<TModifier> modifiers, Set<TParameter> parameters, Set<TAnnotation> annotations, boolean constructor,
-			List<String> thrownExceptions, List<TTag> tags) {
-		Iterator<ASTMethodObserver> iterator = methodObservers.iterator();
-		while (iterator.hasNext()) {
-			ASTMethodObserver methodObserver = iterator.next();
-			methodObserver.update(name, returnTypes, genericReturnType, modifiers, parameters, annotations, constructor,
-					thrownExceptions, tags);
-		}
-	}
-
-	/**
-	 * 
-	 * @param name
-	 */
-	public void notifyImportObservers(String name) {
-		Iterator<ASTImportObserver> iterator = importObservers.iterator();
-		while (iterator.hasNext()) {
-			ASTImportObserver importObserver = iterator.next();
-			importObserver.update(name);
-		}
-	}
-
-	/**
-	 * 
-	 * @param name
-	 */
-	public void notifyInterfaceObservers(String name, String superInterface, List<String> genericTypeArguments) {
-		Iterator<ASTInterfaceObserver> iterator = interfaceObservers.iterator();
-		while (iterator.hasNext()) {
-			ASTInterfaceObserver interfaceObserver = iterator.next();
-			interfaceObserver.update(name, superInterface, genericTypeArguments);
-		}
-	}
-
-	public void registerObserver(ASTAttributeObserver observer) {
-		this.attributeObservers.add(observer);
-	}
-
-	public void registerObserver(ASTClassObserver observer) {
-		this.classObservers.add(observer);
-	}
-
-	public void registerObserver(ASTMethodObserver observer) {
-		this.methodObservers.add(observer);
-	}
-
-	public void registerObserver(ASTImportObserver observer) {
-		this.importObservers.add(observer);
-	}
-
-	public void removeObserver(ASTAttributeObserver observer) {
-		this.attributeObservers.remove(observer);
-	}
-
-	public void removeObserver(ASTClassObserver observer) {
-		this.classObservers.remove(observer);
-	}
-
-	public void removeObserver(ASTMethodObserver observer) {
-		this.methodObservers.remove(observer);
-	}
-
-	public void removeObserver(ASTImportObserver observer) {
-		this.importObservers.remove(observer);
-	}
-
-	public Set<ASTClassObserver> getClassObservers() {
-		return classObservers;
-	}
-
-	public Set<ASTAttributeObserver> getAttributeObservers() {
-		return attributeObservers;
+	public void registerObserver(Class<?> classItem, ASTObserver observer) {
+		observers.put(classItem, observer);
 	}
 
 }
