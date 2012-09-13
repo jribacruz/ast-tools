@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.jdt.core.dom.ASTVisitor;
 import org.eclipse.jdt.core.dom.BodyDeclaration;
@@ -28,9 +29,6 @@ import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 import ast.tools.internal.model.impl.TClassImpl;
 import ast.tools.internal.model.impl.TParameterImpl;
 import ast.tools.internal.model.impl.TTagImpl;
-import ast.tools.internal.predicate.MarkerAnnotationPredicate;
-import ast.tools.internal.predicate.NormalAnnotationPredicate;
-import ast.tools.internal.predicate.SingleMemberAnnotationPredicate;
 import ast.tools.internal.transformer.MarkerAnnotationTransformer;
 import ast.tools.internal.transformer.NormalAnnotationTransformer;
 import ast.tools.internal.transformer.SingleMemberAnnotationTransformer;
@@ -45,7 +43,7 @@ import ast.tools.model.TTag;
 
 import com.google.common.collect.Lists;
 
-public class ExtendedASTVisitor extends ASTVisitor {
+public class Visitor extends ASTVisitor {
 
 	protected TClass klass;
 
@@ -62,7 +60,7 @@ public class ExtendedASTVisitor extends ASTVisitor {
 	protected List<String> superClassGenericTypeArguments;
 	protected List<TTag> tags;
 
-	public ExtendedASTVisitor() {
+	public Visitor() {
 		super();
 		this.annotations = new HashSet<TAnnotation>();
 		this.fields = new HashSet<TField>();
@@ -233,22 +231,43 @@ public class ExtendedASTVisitor extends ASTVisitor {
 
 	@SuppressWarnings("unchecked")
 	protected Collection<TAnnotation> processMarkerAnnotation(BodyDeclaration node) {
+
 		Collection<MarkerAnnotation> markerAnnotationList = CollectionUtils.select(node.modifiers(),
-				new MarkerAnnotationPredicate());
+				new Predicate() {
+
+			@Override
+			public boolean evaluate(Object annotation) {
+				return annotation.getClass() == MarkerAnnotation.class;
+			}
+		});
+
 		return CollectionUtils.collect(markerAnnotationList, new MarkerAnnotationTransformer());
 	}
 
 	@SuppressWarnings("unchecked")
 	protected Collection<TAnnotation> processSingleMemberAnnotation(BodyDeclaration node) {
 		Collection<SingleMemberAnnotation> singleMemberAnnotationList = CollectionUtils.select(node.modifiers(),
-				new SingleMemberAnnotationPredicate());
+				new Predicate() {
+
+			@Override
+			public boolean evaluate(Object annotation) {
+				return annotation.getClass() == SingleMemberAnnotation.class;
+			}
+		});
+
 		return CollectionUtils.collect(singleMemberAnnotationList, new SingleMemberAnnotationTransformer());
 	}
 
 	@SuppressWarnings("unchecked")
 	protected Collection<TAnnotation> processNormalAnnotation(BodyDeclaration node) {
 		Collection<NormalAnnotation> normalAnnotationList = CollectionUtils.select(node.modifiers(),
-				new NormalAnnotationPredicate());
+				new Predicate() {
+
+			@Override
+			public boolean evaluate(Object annotation) {
+				return annotation.getClass() == NormalAnnotation.class;
+			}
+		});
 		return CollectionUtils.collect(normalAnnotationList, new NormalAnnotationTransformer());
 	}
 
