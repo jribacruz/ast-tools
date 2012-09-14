@@ -4,11 +4,11 @@ import ast.tools.model.TMethod;
 
 import com.google.common.base.Predicate;
 
-public class TMethodNamePredicate implements Predicate<TMethod> {
+public class TMethodPredicate implements Predicate<TMethod> {
 
 	private String name;
 
-	public TMethodNamePredicate(String name) {
+	public TMethodPredicate(String name) {
 		super();
 		this.name = name;
 	}

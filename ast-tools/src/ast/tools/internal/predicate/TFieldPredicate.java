@@ -4,11 +4,11 @@ import ast.tools.model.TField;
 
 import com.google.common.base.Predicate;
 
-public class TFieldNamePredicate implements Predicate<TField> {
+public class TFieldPredicate implements Predicate<TField> {
 
 	private String name;
 
-	public TFieldNamePredicate(String name) {
+	public TFieldPredicate(String name) {
 		super();
 		this.name = name;
 	}
