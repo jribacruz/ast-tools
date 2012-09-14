@@ -29,9 +29,7 @@ import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 import ast.tools.internal.model.impl.TClassImpl;
 import ast.tools.internal.model.impl.TParameterImpl;
 import ast.tools.internal.model.impl.TTagImpl;
-import ast.tools.internal.transformer.MarkerAnnotationTransformer;
-import ast.tools.internal.transformer.NormalAnnotationTransformer;
-import ast.tools.internal.transformer.SingleMemberAnnotationTransformer;
+import ast.tools.internal.transformer.AnnotationTransformer;
 import ast.tools.model.TAnnotation;
 import ast.tools.model.TClass;
 import ast.tools.model.TField;
@@ -232,8 +230,7 @@ public class Visitor extends ASTVisitor {
 	@SuppressWarnings("unchecked")
 	protected Collection<TAnnotation> processMarkerAnnotation(BodyDeclaration node) {
 
-		Collection<MarkerAnnotation> markerAnnotationList = CollectionUtils.select(node.modifiers(),
-				new Predicate() {
+		Collection<MarkerAnnotation> markerAnnotationList = CollectionUtils.select(node.modifiers(), new Predicate() {
 
 			@Override
 			public boolean evaluate(Object annotation) {
@@ -241,7 +238,7 @@ public class Visitor extends ASTVisitor {
 			}
 		});
 
-		return CollectionUtils.collect(markerAnnotationList, new MarkerAnnotationTransformer());
+		return CollectionUtils.collect(markerAnnotationList, new AnnotationTransformer().new MarkerAnnotationTransformer());
 	}
 
 	@SuppressWarnings("unchecked")
@@ -255,20 +252,20 @@ public class Visitor extends ASTVisitor {
 			}
 		});
 
-		return CollectionUtils.collect(singleMemberAnnotationList, new SingleMemberAnnotationTransformer());
+		return CollectionUtils.collect(singleMemberAnnotationList,
+				new AnnotationTransformer().new SingleMemberAnnotationTransformer());
 	}
 
 	@SuppressWarnings("unchecked")
 	protected Collection<TAnnotation> processNormalAnnotation(BodyDeclaration node) {
-		Collection<NormalAnnotation> normalAnnotationList = CollectionUtils.select(node.modifiers(),
-				new Predicate() {
+		Collection<NormalAnnotation> normalAnnotationList = CollectionUtils.select(node.modifiers(), new Predicate() {
 
 			@Override
 			public boolean evaluate(Object annotation) {
 				return annotation.getClass() == NormalAnnotation.class;
 			}
 		});
-		return CollectionUtils.collect(normalAnnotationList, new NormalAnnotationTransformer());
+		return CollectionUtils.collect(normalAnnotationList, new AnnotationTransformer().new NormalAnnotationTransformer());
 	}
 
 	@SuppressWarnings("unchecked")
