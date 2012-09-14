@@ -4,12 +4,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import ast.tools.internal.model.impl.TAnnotationImpl;
-import ast.tools.internal.model.impl.TImportImpl;
-import ast.tools.model.TAnnotation;
 import ast.tools.model.TClass;
 import ast.tools.model.TField;
-import ast.tools.model.TImport;
 import ast.tools.model.TMethod;
 
 import com.google.common.base.Predicate;
@@ -63,13 +59,4 @@ public class TUtils {
 		}
 		return null;
 	}
-
-	public static boolean hasAnnotation(Set<TAnnotation> annotations, String name) {
-		return annotations.contains(new TAnnotationImpl(name));
-	}
-
-	public static boolean hasImport(Set<TImport> imports, String name) {
-		return imports.contains(new TImportImpl(name));
-	}
-
 }
