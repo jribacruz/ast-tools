@@ -19,4 +19,5 @@ Export-Package: ast.tools.context,
  ast.tools.model,
  ast.tools.observable,
  ast.tools.observer,
+ ast.tools.predicate,
  ast.tools.util
