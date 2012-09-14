@@ -1,4 +1,4 @@
-package ast.tools.internal.predicate;
+package ast.tools.predicate;
 
 import ast.tools.internal.model.impl.TAnnotationImpl;
 import ast.tools.model.TAnnotation;

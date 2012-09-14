@@ -1,4 +1,4 @@
-package ast.tools.internal.predicate;
+package ast.tools.predicate;
 
 import ast.tools.model.TMethod;
 
