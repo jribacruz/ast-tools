@@ -6,7 +6,11 @@ import java.util.List;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragment;
+import org.eclipse.jdt.core.IPackageFragmentRoot;
+import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
 
 import ast.tools.context.ASTContext;
 import ast.tools.core.ASTProcessor;
@@ -96,6 +100,52 @@ public class ASTUtils {
 			e.printStackTrace();
 		}
 		return unitList;
+	}
+
+	public static List<ICompilationUnit> getAllCompilationUnits(IJavaProject javaProject) {
+		List<ICompilationUnit> units = new ArrayList<ICompilationUnit>();
+		try {
+			for (IPackageFragment fragment : javaProject.getPackageFragments()) {
+				for (ICompilationUnit compilationUnit : fragment.getCompilationUnits()) {
+					units.add(compilationUnit);
+				}
+			}
+		} catch (JavaModelException e) {
+			e.printStackTrace();
+		}
+		return units;
+	}
+
+	public static ICompilationUnit getCompilationUnit(IJavaProject javaProject, String packageName, String compilationUnitName) {
+		if (javaProject != null) {
+			try {
+				IType type = javaProject.findType(packageName, compilationUnitName);
+				return type.getCompilationUnit();
+			} catch (JavaModelException e) {
+				e.printStackTrace();
+			}
+		}
+		return null;
+	}
+
+	public static IJavaProject getJavaProject(ISelection selection) {
+		if (selection != null && !selection.isEmpty()) {
+			IStructuredSelection structuredSelection = (IStructuredSelection) selection;
+			if (structuredSelection.getFirstElement() instanceof ICompilationUnit) {
+				ICompilationUnit unit = (ICompilationUnit) structuredSelection.getFirstElement();
+				return unit.getJavaProject();
+			} else if (structuredSelection.getFirstElement() instanceof IPackageFragment) {
+				IPackageFragment packageFragment = (IPackageFragment) structuredSelection.getFirstElement();
+				return packageFragment.getJavaProject();
+			} else if (structuredSelection.getFirstElement() instanceof IPackageFragmentRoot) {
+				IPackageFragmentRoot fragmentRoot = (IPackageFragmentRoot) structuredSelection.getFirstElement();
+				return fragmentRoot.getJavaProject();
+			} else if (structuredSelection.getFirstElement() instanceof IJavaProject) {
+				IJavaProject javaProject = (IJavaProject) structuredSelection.getFirstElement();
+				return javaProject;
+			}
+		}
+		return null;
 	}
 
 	public static TClass getTClass(ICompilationUnit iunit) {
