@@ -12,6 +12,13 @@ import com.google.common.base.Predicate;
 
 public class TUtils {
 
+	/**
+	 * returna o atributo da classe de acordo com o predicado especifico.
+	 * 
+	 * @param tClass
+	 * @param predicate
+	 * @return
+	 */
 	public static TField findAttribute(TClass tClass, Predicate<TField> predicate) {
 		for (TField attribute : tClass.getFields()) {
 			if (predicate.apply(attribute)) {
@@ -21,6 +28,13 @@ public class TUtils {
 		return null;
 	}
 
+	/**
+	 * retorna a lista de atributos espeficicados de acordo com o predicado
+	 * 
+	 * @param tClass
+	 * @param predicate
+	 * @return
+	 */
 	public static Set<TField> filterAttributes(TClass tClass, Predicate<TField> predicate) {
 		Set<TField> attributeSet = new HashSet<TField>();
 		if (tClass != null) {
@@ -36,6 +50,13 @@ public class TUtils {
 		return attributeSet;
 	}
 
+	/**
+	 * Retorna os metodos da classe de acordo com o predicado especificado
+	 * 
+	 * @param tClass
+	 * @param predicate
+	 * @return
+	 */
 	public static Set<TMethod> filterMethods(TClass tClass, Predicate<TMethod> predicate) {
 		Set<TMethod> methodSet = new HashSet<TMethod>();
 		if (tClass != null) {
@@ -51,6 +72,13 @@ public class TUtils {
 		return methodSet;
 	}
 
+	/**
+	 * Retorna o metodo especificado de acordo com o predicado especificado
+	 * 
+	 * @param tClass
+	 * @param predicate
+	 * @return
+	 */
 	public static TMethod findMethod(TClass tClass, Predicate<TMethod> predicate) {
 		for (TMethod method : tClass.getMethods()) {
 			if (predicate.apply(method)) {
