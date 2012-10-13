@@ -277,7 +277,10 @@ public class Visitor extends ASTVisitor {
 				if (!StringUtils.isEmpty(tagElement.getTagName())) {
 					List<TextElement> fragments = tagElement.fragments();
 					if (!fragments.isEmpty()) {
-						tags.add(new TTagImpl(tagElement.getTagName().substring(1), fragments.get(0).getText()));
+						TextElement element = fragments.get(0);
+						if(element != null) {
+							tags.add(new TTagImpl(tagElement.getTagName().substring(1), element.getText()));
+						}
 					}
 				}
 			}
