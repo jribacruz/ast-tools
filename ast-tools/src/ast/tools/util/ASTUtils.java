@@ -28,6 +28,15 @@ public class ASTUtils {
 		return null;
 	}
 
+	public static ICompilationUnit find(List<ICompilationUnit> units, Predicate<ASTContext> predicate) {
+		for (ICompilationUnit unit : units) {
+			ASTProcessor processor = new ASTProcessor(unit);
+			ASTContext context = processor.visit();
+			return context != null && predicate.apply(context) ? unit : null;
+		}
+		return null;
+	}
+
 	public static ICompilationUnit find(IJavaProject javaProject, Predicate<ASTContext> predicate) {
 		try {
 			for (IPackageFragment fragment : javaProject.getPackageFragments()) {
@@ -57,6 +66,18 @@ public class ASTUtils {
 	}
 
 	public static List<ICompilationUnit> filter(ICompilationUnit[] units, Predicate<ASTContext> predicate) {
+		List<ICompilationUnit> unitList = new ArrayList<ICompilationUnit>();
+		for (ICompilationUnit unit : units) {
+			ASTProcessor processor = new ASTProcessor(unit);
+			ASTContext context = processor.visit();
+			if (context != null && predicate.apply(context)) {
+				unitList.add(unit);
+			}
+		}
+		return unitList;
+	}
+
+	public static List<ICompilationUnit> filter(List<ICompilationUnit> units, Predicate<ASTContext> predicate) {
 		List<ICompilationUnit> unitList = new ArrayList<ICompilationUnit>();
 		for (ICompilationUnit unit : units) {
 			ASTProcessor processor = new ASTProcessor(unit);
