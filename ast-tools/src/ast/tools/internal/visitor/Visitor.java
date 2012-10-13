@@ -271,12 +271,14 @@ public class Visitor extends ASTVisitor {
 	@SuppressWarnings("unchecked")
 	protected List<TTag> getTags(Javadoc javadoc) {
 		List<TTag> tags = new ArrayList<TTag>();
-		List<TagElement> elements = javadoc.tags();
-		for (TagElement tagElement : elements) {
-			if (!StringUtils.isEmpty(tagElement.getTagName())) {
-				List<TextElement> fragments = tagElement.fragments();
-				if (!fragments.isEmpty()) {
-					tags.add(new TTagImpl(tagElement.getTagName().substring(1), fragments.get(0).getText()));
+		if (javadoc != null) {
+			List<TagElement> elements = javadoc.tags();
+			for (TagElement tagElement : elements) {
+				if (!StringUtils.isEmpty(tagElement.getTagName())) {
+					List<TextElement> fragments = tagElement.fragments();
+					if (!fragments.isEmpty()) {
+						tags.add(new TTagImpl(tagElement.getTagName().substring(1), fragments.get(0).getText()));
+					}
 				}
 			}
 		}
