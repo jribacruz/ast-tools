@@ -8,7 +8,6 @@ import java.util.Set;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
-import org.apache.commons.lang.StringUtils;
 import org.eclipse.jdt.core.dom.ASTVisitor;
 import org.eclipse.jdt.core.dom.BodyDeclaration;
 import org.eclipse.jdt.core.dom.FieldDeclaration;
@@ -20,15 +19,12 @@ import org.eclipse.jdt.core.dom.ParameterizedType;
 import org.eclipse.jdt.core.dom.SimpleType;
 import org.eclipse.jdt.core.dom.SingleMemberAnnotation;
 import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
-import org.eclipse.jdt.core.dom.TagElement;
-import org.eclipse.jdt.core.dom.TextElement;
 import org.eclipse.jdt.core.dom.Type;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 
 import ast.tools.internal.model.impl.TClassImpl;
 import ast.tools.internal.model.impl.TParameterImpl;
-import ast.tools.internal.model.impl.TTagImpl;
 import ast.tools.internal.transformer.AnnotationTransformer;
 import ast.tools.model.TAnnotation;
 import ast.tools.model.TClass;
@@ -271,20 +267,20 @@ public class Visitor extends ASTVisitor {
 	@SuppressWarnings("unchecked")
 	protected List<TTag> getTags(Javadoc javadoc) {
 		List<TTag> tags = new ArrayList<TTag>();
-		if (javadoc != null) {
-			List<TagElement> elements = javadoc.tags();
-			for (TagElement tagElement : elements) {
-				if (!StringUtils.isEmpty(tagElement.getTagName())) {
-					List<TextElement> fragments = tagElement.fragments();
-					if (!fragments.isEmpty()) {
-						TextElement element = fragments.get(0);
-						if(element != null) {
-							tags.add(new TTagImpl(tagElement.getTagName().substring(1), element.getText()));
-						}
-					}
-				}
-			}
-		}
+		//		if (javadoc != null) {
+		//			List<TagElement> elements = javadoc.tags();
+		//			for (TagElement tagElement : elements) {
+		//				if (!StringUtils.isEmpty(tagElement.getTagName())) {
+		//					List<TextElement> fragments = tagElement.fragments();
+		//					if (!fragments.isEmpty()) {
+		//						TextElement element = fragments.get(0);
+		//						if(element != null) {
+		//							tags.add(new TTagImpl(tagElement.getTagName().substring(1), element.getText()));
+		//						}
+		//					}
+		//				}
+		//			}
+		//		}
 		return tags;
 	}
 }
