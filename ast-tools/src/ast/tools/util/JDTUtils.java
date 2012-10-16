@@ -18,7 +18,7 @@ import ast.tools.model.TClass;
 
 import com.google.common.base.Predicate;
 
-public class ASTUtils {
+public class JDTUtils {
 	public static ICompilationUnit find(ICompilationUnit[] units, Predicate<ASTContext> predicate) {
 		for (ICompilationUnit unit : units) {
 			ASTProcessor processor = new ASTProcessor(unit);
@@ -173,6 +173,38 @@ public class ASTUtils {
 		ASTProcessor processor = new ASTProcessor(iunit);
 		processor.visit();
 		return processor.getTClass();
+	}
+
+	public static boolean isCompilationUnit(ISelection selection) {
+		if(selection != null && !selection.isEmpty()) {
+			IStructuredSelection structuredSelection= (IStructuredSelection) selection;
+			return structuredSelection.getFirstElement() instanceof ICompilationUnit;
+		}
+		return false;
+	}
+
+	public static boolean isPackageFragment(ISelection selection) {
+		if(selection != null && !selection.isEmpty()) {
+			IStructuredSelection structuredSelection= (IStructuredSelection) selection;
+			return structuredSelection.getFirstElement() instanceof IPackageFragment;
+		}
+		return false;
+	}
+
+	public static boolean isPackageFragmentRoot(ISelection selection) {
+		if(selection != null && !selection.isEmpty()) {
+			IStructuredSelection structuredSelection= (IStructuredSelection) selection;
+			return structuredSelection.getFirstElement() instanceof IPackageFragmentRoot;
+		}
+		return false;
+	}
+
+	public static boolean isJavaProject(ISelection selection) {
+		if(selection != null && !selection.isEmpty()) {
+			IStructuredSelection structuredSelection= (IStructuredSelection) selection;
+			return structuredSelection.getFirstElement() instanceof IJavaProject;
+		}
+		return false;
 	}
 
 }
