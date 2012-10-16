@@ -4,7 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.jdt.core.ICompilationUnit;
+import org.eclipse.jdt.core.IField;
+import org.eclipse.jdt.core.IImportDeclaration;
 import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.IType;
@@ -235,28 +238,53 @@ public class JDTUtils {
 		return false;
 	}
 
-	public static void createImport(ICompilationUnit unit, String source) {
+	public static ICompilationUnit createCompilationUnit(IPackageFragment fragment, String name, String source) {
 		try {
-			getType(unit).getCompilationUnit().createImport(source, null, null);
+			return fragment.createCompilationUnit(name, source, false, null);
 		} catch (JavaModelException e) {
 			e.printStackTrace();
 		}
+
+		return null;
 	}
 
-	public static void createField(ICompilationUnit unit, String source) {
+	public static IPackageFragment createPackageFragment(IPackageFragmentRoot root, String source) {
 		try {
-			getType(unit).createField(source, null, false, null);
+			return root.createPackageFragment(source, true, null);
 		} catch (JavaModelException e) {
 			e.printStackTrace();
 		}
+		return null;
 	}
 
-	public static void createMethod(ICompilationUnit unit, String source) {
+	public static IImportDeclaration createImport(ICompilationUnit unit, String source) {
 		try {
-			getType(unit).createMethod(source, null, false, null);
+			return getType(unit).getCompilationUnit().createImport(source, null, null);
 		} catch (JavaModelException e) {
 			e.printStackTrace();
 		}
+
+		return null;
+	}
+
+	public static IField createField(ICompilationUnit unit, String source) {
+		try {
+			return getType(unit).createField(source, null, false, null);
+		} catch (JavaModelException e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	public static IMethod createMethod(ICompilationUnit unit, String source) {
+		try {
+			return getType(unit).createMethod(source, null, false, null);
+		} catch (JavaModelException e) {
+			e.printStackTrace();
+		}
+
+		return null;
 	}
 
 	public static String getCompilationUnitName(ICompilationUnit unit) {
