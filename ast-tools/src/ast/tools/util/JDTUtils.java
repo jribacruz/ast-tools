@@ -153,11 +153,34 @@ public class JDTUtils {
 	}
 
 	public static IPackageFragment getPackageFragment(ISelection selection) {
-		return (IPackageFragment) (isPackageFragment(selection) ? ((IStructuredSelection) selection).getFirstElement() : null);
+		if (selection != null && !selection.isEmpty()) {
+			IStructuredSelection structuredSelection = (IStructuredSelection) selection;
+			if (structuredSelection.getFirstElement() instanceof ICompilationUnit) {
+				ICompilationUnit unit = (ICompilationUnit) structuredSelection.getFirstElement();
+				return getType(unit).getPackageFragment();
+			} else if (structuredSelection.getFirstElement() instanceof IPackageFragment) {
+				IPackageFragment packageFragment = (IPackageFragment) structuredSelection.getFirstElement();
+				return packageFragment;
+			}
+		}
+		return null;
 	}
 
 	public static IPackageFragmentRoot getPackageFragmentRoot(ISelection selection) {
-		return (IPackageFragmentRoot) (isPackageFragmentRoot(selection) ? ((IStructuredSelection) selection).getFirstElement() : null);
+		if (selection != null && !selection.isEmpty()) {
+			IStructuredSelection structuredSelection = (IStructuredSelection) selection;
+			if (structuredSelection.getFirstElement() instanceof ICompilationUnit) {
+				ICompilationUnit unit = (ICompilationUnit) structuredSelection.getFirstElement();
+				return (IPackageFragmentRoot) getType(unit).getPackageFragment().getParent();
+			} else if (structuredSelection.getFirstElement() instanceof IPackageFragment) {
+				IPackageFragment packageFragment = (IPackageFragment) structuredSelection.getFirstElement();
+				return (IPackageFragmentRoot) packageFragment.getParent();
+			} else if (structuredSelection.getFirstElement() instanceof IPackageFragmentRoot) {
+				IPackageFragmentRoot fragmentRoot = (IPackageFragmentRoot) structuredSelection.getFirstElement();
+				return fragmentRoot;
+			}
+		}
+		return null;
 	}
 
 	public static IJavaProject getJavaProject(ISelection selection) {
@@ -214,7 +237,7 @@ public class JDTUtils {
 
 	public static void createImport(ICompilationUnit unit, String source) {
 		try {
-			unit.getType(getCompilationUnitName(unit)).getCompilationUnit().createImport(source, null, null);
+			getType(unit).getCompilationUnit().createImport(source, null, null);
 		} catch (JavaModelException e) {
 			e.printStackTrace();
 		}
@@ -222,7 +245,7 @@ public class JDTUtils {
 
 	public static void createField(ICompilationUnit unit, String source) {
 		try {
-			unit.getType(getCompilationUnitName(unit)).createField(source, null, false, null);
+			getType(unit).createField(source, null, false, null);
 		} catch (JavaModelException e) {
 			e.printStackTrace();
 		}
@@ -230,7 +253,7 @@ public class JDTUtils {
 
 	public static void createMethod(ICompilationUnit unit, String source) {
 		try {
-			unit.getType(getCompilationUnitName(unit)).createMethod(source, null, false, null);
+			getType(unit).createMethod(source, null, false, null);
 		} catch (JavaModelException e) {
 			e.printStackTrace();
 		}
@@ -238,6 +261,10 @@ public class JDTUtils {
 
 	public static String getCompilationUnitName(ICompilationUnit unit) {
 		return unit.getElementName().replace(".java", "");
+	}
+
+	public static IType getType(ICompilationUnit unit) {
+		return unit.getType(getCompilationUnitName(unit));
 	}
 
 }
