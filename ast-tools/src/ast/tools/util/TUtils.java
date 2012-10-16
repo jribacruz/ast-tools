@@ -4,6 +4,9 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import org.eclipse.jdt.core.ICompilationUnit;
+
+import ast.tools.core.ASTProcessor;
 import ast.tools.model.TClass;
 import ast.tools.model.TField;
 import ast.tools.model.TMethod;
@@ -11,6 +14,12 @@ import ast.tools.model.TMethod;
 import com.google.common.base.Predicate;
 
 public class TUtils {
+
+	public static TClass getTClass(ICompilationUnit iunit) {
+		ASTProcessor processor = new ASTProcessor(iunit);
+		processor.visit();
+		return processor.getTClass();
+	}
 
 	/**
 	 * returna o atributo da classe de acordo com o predicado especifico.

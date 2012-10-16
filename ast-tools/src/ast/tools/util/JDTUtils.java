@@ -14,7 +14,6 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 
 import ast.tools.context.ASTContext;
 import ast.tools.core.ASTProcessor;
-import ast.tools.model.TClass;
 
 import com.google.common.base.Predicate;
 
@@ -167,12 +166,6 @@ public class JDTUtils {
 			}
 		}
 		return null;
-	}
-
-	public static TClass getTClass(ICompilationUnit iunit) {
-		ASTProcessor processor = new ASTProcessor(iunit);
-		processor.visit();
-		return processor.getTClass();
 	}
 
 	public static boolean isCompilationUnit(ISelection selection) {
