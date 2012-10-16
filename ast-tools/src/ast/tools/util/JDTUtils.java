@@ -148,6 +148,18 @@ public class JDTUtils {
 		return null;
 	}
 
+	public static ICompilationUnit getCompilationUnit(ISelection selection) {
+		return (ICompilationUnit) (isCompilationUnit(selection) ? ((IStructuredSelection) selection).getFirstElement() : null);
+	}
+
+	public static IPackageFragment getPackageFragment(ISelection selection) {
+		return (IPackageFragment) (isPackageFragment(selection) ? ((IStructuredSelection) selection).getFirstElement() : null);
+	}
+
+	public static IPackageFragmentRoot getPackageFragmentRoot(ISelection selection) {
+		return (IPackageFragmentRoot) (isPackageFragmentRoot(selection) ? ((IStructuredSelection) selection).getFirstElement() : null);
+	}
+
 	public static IJavaProject getJavaProject(ISelection selection) {
 		if (selection != null && !selection.isEmpty()) {
 			IStructuredSelection structuredSelection = (IStructuredSelection) selection;
@@ -169,35 +181,63 @@ public class JDTUtils {
 	}
 
 	public static boolean isCompilationUnit(ISelection selection) {
-		if(selection != null && !selection.isEmpty()) {
-			IStructuredSelection structuredSelection= (IStructuredSelection) selection;
+		if (selection != null && !selection.isEmpty()) {
+			IStructuredSelection structuredSelection = (IStructuredSelection) selection;
 			return structuredSelection.getFirstElement() instanceof ICompilationUnit;
 		}
 		return false;
 	}
 
 	public static boolean isPackageFragment(ISelection selection) {
-		if(selection != null && !selection.isEmpty()) {
-			IStructuredSelection structuredSelection= (IStructuredSelection) selection;
+		if (selection != null && !selection.isEmpty()) {
+			IStructuredSelection structuredSelection = (IStructuredSelection) selection;
 			return structuredSelection.getFirstElement() instanceof IPackageFragment;
 		}
 		return false;
 	}
 
 	public static boolean isPackageFragmentRoot(ISelection selection) {
-		if(selection != null && !selection.isEmpty()) {
-			IStructuredSelection structuredSelection= (IStructuredSelection) selection;
+		if (selection != null && !selection.isEmpty()) {
+			IStructuredSelection structuredSelection = (IStructuredSelection) selection;
 			return structuredSelection.getFirstElement() instanceof IPackageFragmentRoot;
 		}
 		return false;
 	}
 
 	public static boolean isJavaProject(ISelection selection) {
-		if(selection != null && !selection.isEmpty()) {
-			IStructuredSelection structuredSelection= (IStructuredSelection) selection;
+		if (selection != null && !selection.isEmpty()) {
+			IStructuredSelection structuredSelection = (IStructuredSelection) selection;
 			return structuredSelection.getFirstElement() instanceof IJavaProject;
 		}
 		return false;
+	}
+
+	public static void createImport(ICompilationUnit unit, String source) {
+		try {
+			unit.getType(getCompilationUnitName(unit)).getCompilationUnit().createImport(source, null, null);
+		} catch (JavaModelException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static void createField(ICompilationUnit unit, String source) {
+		try {
+			unit.getType(getCompilationUnitName(unit)).createField(source, null, false, null);
+		} catch (JavaModelException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static void createMethod(ICompilationUnit unit, String source) {
+		try {
+			unit.getType(getCompilationUnitName(unit)).createMethod(source, null, false, null);
+		} catch (JavaModelException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static String getCompilationUnitName(ICompilationUnit unit) {
+		return unit.getElementName().replace(".java", "");
 	}
 
 }
