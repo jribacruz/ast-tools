@@ -64,6 +64,8 @@ public class Visitor extends ASTVisitor {
 		this.genericTypeArguments = new ArrayList<String>();
 		this.superClassGenericTypeArguments = new ArrayList<String>();
 		this.tags = new ArrayList<TTag>();
+		this.superClassName = "";
+		this.packageName = "";
 
 	}
 
