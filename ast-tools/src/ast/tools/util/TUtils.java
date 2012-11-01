@@ -12,6 +12,7 @@ import ast.tools.model.TField;
 import ast.tools.model.TMethod;
 
 import com.google.common.base.Predicate;
+import com.google.common.collect.Lists;
 
 public class TUtils {
 
@@ -95,5 +96,10 @@ public class TUtils {
 			}
 		}
 		return null;
+	}
+
+	public static boolean isCollectionAttribute(TField field) {
+		return !field.getTypes().isEmpty() ? field.getGenericType().equals("List") || field.getGenericType().equals("Collection")
+				|| field.getGenericType().equals("Set") : field.getTypes().contains(Lists.newArrayList("List", "Collection", "Set"));
 	}
 }

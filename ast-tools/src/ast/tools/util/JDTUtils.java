@@ -17,6 +17,8 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 
 import ast.tools.context.ASTContext;
 import ast.tools.core.ASTProcessor;
+import ast.tools.internal.model.impl.TAnnotationImpl;
+import ast.tools.model.TClass;
 
 import com.google.common.base.Predicate;
 
@@ -293,6 +295,58 @@ public class JDTUtils {
 
 	public static IType getType(ICompilationUnit unit) {
 		return unit.getType(getCompilationUnitName(unit));
+	}
+
+	public static boolean isDomain(ICompilationUnit unit) {
+		TClass tClass = TUtils.getTClass(unit);
+		if (tClass != null) {
+			if (tClass.getAnnotations().contains(new TAnnotationImpl("Entity"))) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public static boolean isBC(ICompilationUnit unit) {
+		TClass tClass = TUtils.getTClass(unit);
+		if (tClass != null) {
+			if (tClass.getAnnotations().contains(new TAnnotationImpl("BusinessController"))) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public static boolean isDAO(ICompilationUnit unit) {
+		TClass tClass = TUtils.getTClass(unit);
+		if (tClass != null) {
+			if (tClass.getAnnotations().contains(new TAnnotationImpl("PersistenceController"))) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public static boolean isEditMB(ICompilationUnit unit) {
+		TClass tClass = TUtils.getTClass(unit);
+		if (tClass != null) {
+			if (tClass.getAnnotations().contains(new TAnnotationImpl("ViewController"))
+					&& tClass.getSuperClassName().equals("AbstractEditPageBean")) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public static boolean isListMB(ICompilationUnit unit) {
+		TClass tClass = TUtils.getTClass(unit);
+		if (tClass != null) {
+			if (tClass.getAnnotations().contains(new TAnnotationImpl("ViewController"))
+					&& tClass.getSuperClassName().equals("AbstractListPageBean")) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 }
