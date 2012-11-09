@@ -1,8 +1,14 @@
 package ast.tools.util;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IField;
 import org.eclipse.jdt.core.IImportDeclaration;
@@ -12,6 +18,7 @@ import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 
@@ -51,7 +58,7 @@ public class JDTUtils {
 				}
 			}
 		} catch (JavaModelException e) {
-			e.printStackTrace();
+			MessageDialog.openError(null, "Erro", e.getLocalizedMessage());
 		}
 		return null;
 	}
@@ -64,7 +71,7 @@ public class JDTUtils {
 				return context != null && predicate.apply(context) ? unit : null;
 			}
 		} catch (JavaModelException e) {
-			e.printStackTrace();
+			MessageDialog.openError(null, "Erro", e.getLocalizedMessage());
 		}
 		return null;
 	}
@@ -106,7 +113,7 @@ public class JDTUtils {
 				}
 			}
 		} catch (JavaModelException e) {
-			e.printStackTrace();
+			MessageDialog.openError(null, "Erro", e.getLocalizedMessage());
 		}
 		return unitList;
 	}
@@ -122,7 +129,7 @@ public class JDTUtils {
 				}
 			}
 		} catch (JavaModelException e) {
-			e.printStackTrace();
+			MessageDialog.openError(null, "Erro", e.getLocalizedMessage());
 		}
 		return unitList;
 	}
@@ -136,7 +143,7 @@ public class JDTUtils {
 				}
 			}
 		} catch (JavaModelException e) {
-			e.printStackTrace();
+			MessageDialog.openError(null, "Erro", e.getLocalizedMessage());
 		}
 		return units;
 	}
@@ -147,7 +154,7 @@ public class JDTUtils {
 				IType type = javaProject.findType(packageName, compilationUnitName);
 				return type.getCompilationUnit();
 			} catch (JavaModelException e) {
-				e.printStackTrace();
+				MessageDialog.openError(null, "Erro", e.getLocalizedMessage());
 			}
 		}
 		return null;
@@ -242,9 +249,10 @@ public class JDTUtils {
 
 	public static ICompilationUnit createCompilationUnit(IPackageFragment fragment, String name, String source) {
 		try {
+			name = name.endsWith(".java") ? name : name.concat(".java");
 			return fragment.createCompilationUnit(name, source, false, null);
 		} catch (JavaModelException e) {
-			e.printStackTrace();
+			MessageDialog.openError(null, "Erro", e.getLocalizedMessage());
 		}
 
 		return null;
@@ -254,7 +262,7 @@ public class JDTUtils {
 		try {
 			return root.createPackageFragment(source, true, null);
 		} catch (JavaModelException e) {
-			e.printStackTrace();
+			MessageDialog.openError(null, "Erro", e.getLocalizedMessage());
 		}
 		return null;
 	}
@@ -263,7 +271,7 @@ public class JDTUtils {
 		try {
 			return getType(unit).getCompilationUnit().createImport(source, null, null);
 		} catch (JavaModelException e) {
-			e.printStackTrace();
+			MessageDialog.openError(null, "Erro", e.getLocalizedMessage());
 		}
 
 		return null;
@@ -273,7 +281,7 @@ public class JDTUtils {
 		try {
 			return getType(unit).createField(source, null, false, null);
 		} catch (JavaModelException e) {
-			e.printStackTrace();
+			MessageDialog.openError(null, "Erro", e.getLocalizedMessage());
 		}
 
 		return null;
@@ -283,10 +291,25 @@ public class JDTUtils {
 		try {
 			return getType(unit).createMethod(source, null, false, null);
 		} catch (JavaModelException e) {
-			e.printStackTrace();
+			MessageDialog.openError(null, "Erro", e.getLocalizedMessage());
 		}
 
 		return null;
+	}
+
+	public static boolean createFile(IProject project, String path, String name, String extention, String source) {
+		IFolder folder = project.getFolder(path);
+		if (folder.exists()) {
+			IFile file = folder.getFile(name.concat(".").concat(extention));
+			InputStream stream = new ByteArrayInputStream(source.getBytes());
+			try {
+				file.create(stream, false, null);
+				return true;
+			} catch (CoreException e) {
+				MessageDialog.openError(null, "Erro", e.getLocalizedMessage());
+			}
+		}
+		return false;
 	}
 
 	public static String getCompilationUnitName(ICompilationUnit unit) {
@@ -338,6 +361,16 @@ public class JDTUtils {
 		return false;
 	}
 
+	public static boolean isFolder(ISelection selection) {
+		IStructuredSelection structuredSelection = (IStructuredSelection) selection;
+		return structuredSelection.getFirstElement() instanceof IFolder ? true : false;
+	}
+
+	public static boolean isFile(ISelection selection) {
+		IStructuredSelection structuredSelection = (IStructuredSelection) selection;
+		return structuredSelection.getFirstElement() instanceof IFile ? true : false;
+	}
+
 	public static boolean isListMB(ICompilationUnit unit) {
 		TClass tClass = TUtils.getTClass(unit);
 		if (tClass != null) {
@@ -347,6 +380,22 @@ public class JDTUtils {
 			}
 		}
 		return false;
+	}
+
+	public static IProject getProject(ISelection selection) {
+		IJavaProject javaProject = JDTUtils.getJavaProject(selection);
+		if (javaProject != null) {
+			return javaProject.getProject();
+		}
+		IStructuredSelection structuredSelection = (IStructuredSelection) selection;
+		if (structuredSelection instanceof IFolder) {
+			IFolder folder = (IFolder) structuredSelection.getFirstElement();
+			return folder.getProject();
+		} else if (structuredSelection instanceof IFile) {
+			IFile file = (IFile) structuredSelection.getFirstElement();
+			return file.getProject();
+		}
+		return null;
 	}
 
 }
